@@ -1,0 +1,36 @@
+package com.zabrek.rpgplugin.database;
+
+import com.zabrek.rpgplugin.Skills;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class PlayerData {
+    private Skills equippedSkill;
+    private final Map<String, Long> cooldowns;
+
+    public PlayerData() {
+        this.equippedSkill = null;
+        this.cooldowns = new HashMap<>();
+    }
+
+    public Skills getEquippedSkill() {
+        return equippedSkill;
+    }
+
+    public void setEquippedSkill(Skills equippedSkill) {
+        this.equippedSkill = equippedSkill;
+    }
+
+    public Map<String, Long> getCooldowns() { return cooldowns; }
+
+    public boolean isOnCooldown(String skill) {
+        if (!cooldowns.containsKey(skill)) return false;
+        return System.currentTimeMillis() < cooldowns.get(skill);
+    }
+
+    public void addCooldown(String skill, long seg) {
+        long timeExpiration = System.currentTimeMillis() + (seg * 1000);
+        cooldowns.put(skill, timeExpiration);
+    }
+}

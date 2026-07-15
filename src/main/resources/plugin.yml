@@ -1,0 +1,17 @@
+name: RPGPlugin
+version: 1.0.0
+main: com.zabrek.rpgplugin.RPGPlugin
+description: An example plugin
+author: ZabrekMC
+website: https://papermc.io
+api-version: '26.2'
+
+commands:
+  skills:
+    description: Open the skill selection menu.
+    usage: /skills
+    permission: rpgplugin.skills
+  jump:
+    description: It propels you through the air.
+    usage: /jump
+    permission: rpgplugin.jump
