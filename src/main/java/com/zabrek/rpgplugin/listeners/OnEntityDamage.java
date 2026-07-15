@@ -3,23 +3,21 @@ package com.zabrek.rpgplugin.listeners;
 import com.zabrek.rpgplugin.Skills;
 import com.zabrek.rpgplugin.database.*;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import com.zabrek.rpgplugin.skills.SkillBehavior;
+import com.zabrek.rpgplugin.skills.SkillRegistry;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class OnEntityDamage implements Listener {
     private final DataManager dataManager;
+    private final SkillRegistry skillRegistry;
 
-    public OnEntityDamage(DataManager dataManager) {
+    public OnEntityDamage(DataManager dataManager, SkillRegistry skillRegistry) {
         this.dataManager = dataManager;
+        this.skillRegistry = skillRegistry;
     }
 
     @EventHandler
@@ -31,24 +29,10 @@ public class OnEntityDamage implements Listener {
             Skills playerSkill = playerData.getEquippedSkill();
             if (playerSkill == null) return;
 
-            switch (event.getCause()) {
-                case FIRE, LAVA, FIRE_TICK -> {
-                    if (!(playerSkill == Skills.LAVA_LEATHER)) return;
+            SkillBehavior behavior = skillRegistry.getBehavior(playerSkill);
+            if (behavior == null) return;
 
-                    if (ThreadLocalRandom.current().nextInt(4) == 0) { // 25%
-                        event.setCancelled(true);
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 100, 1));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 100, 1));
-                    }
-                }
-
-                case FALL -> {
-                    if (!(playerSkill == Skills.WIND_LEAP)) return;
-
-                    event.setCancelled(true);
-                    player.sendMessage(Component.text("Your wind ability saved you from falling!", NamedTextColor.AQUA));
-                }
-            }
+            behavior.onDamage(event, player);
         }
     }
 }
