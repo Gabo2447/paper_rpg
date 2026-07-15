@@ -12,3 +12,10 @@ A basic RPG plugin for Paper/Spigot version 26.2 that adds a system of active an
 - Spigot/Paper API
 - Adventure API
 - YAML
+
+## Installation
+
+1. Download the RPGPlugin.jar file attached below in the Assets section.
+2. Drag it into the plugins/ folder on your Spigot/Paper (26.2)-compatible server.
+3. Start or restart the server.
+4. Use /skills in-game to select your first skill
