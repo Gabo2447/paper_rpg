@@ -1,6 +1,7 @@
 package com.zabrek.rpgplugin;
 
 import com.zabrek.rpgplugin.commands.*;
+import com.zabrek.rpgplugin.database.types.SQLiteDataManager;
 import com.zabrek.rpgplugin.listeners.*;
 import com.zabrek.rpgplugin.database.DataManager;
 import com.zabrek.rpgplugin.database.types.YMLDataManager;
@@ -12,12 +13,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RPGPlugin extends JavaPlugin {
-    private final DataManager dataManager = new YMLDataManager(this);
+    private final DataManager dataManager = new SQLiteDataManager(this);
     private final SkillRegistry skillRegistry = new SkillRegistry();
 
     @Override
     public void onEnable() {
         PluginManager pm = Bukkit.getPluginManager();
+        dataManager.setup();
 
         pm.registerEvents(new OnPlayerJoin(dataManager), this);
         pm.registerEvents(new OnEntityDamage(dataManager, skillRegistry), this);
@@ -39,5 +41,6 @@ public class RPGPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         dataManager.saveAll(true);
+        dataManager.shutdown();
     }
 }

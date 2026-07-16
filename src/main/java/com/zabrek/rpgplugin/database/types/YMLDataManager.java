@@ -118,11 +118,6 @@ public class YMLDataManager implements DataManager {
         memoryRam.remove(id);
     }
 
-    @Override
-    public FileConfiguration getConfig() {
-        return config;
-    }
-
     private void saveConfig() {
         try {
             config.save(file);
@@ -130,4 +125,7 @@ public class YMLDataManager implements DataManager {
             plugin.getLogger().severe("The players.yml file could not be saved!");
         }
     }
+
+    @Override
+    public void shutdown() {}
 }

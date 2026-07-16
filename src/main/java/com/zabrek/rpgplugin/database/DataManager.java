@@ -12,5 +12,5 @@ public interface DataManager {
     void saveAll(boolean clearCache);
     void unloadPlayer(UUID id);
 
-    FileConfiguration getConfig();
+    void shutdown();
 }
