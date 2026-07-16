@@ -30,9 +30,9 @@ public class RPGPlugin extends JavaPlugin {
             SkillsCmd.setExecutor(new SkillsCommand());
         }
 
-        PluginCommand JumpCmd = this.getCommand("jump");
-        if (JumpCmd != null) {
-            JumpCmd.setExecutor(new JumpCommand(dataManager));
+        PluginCommand UseCmd = this.getCommand("use");
+        if (UseCmd != null) {
+            UseCmd.setExecutor(new UseCommand(dataManager, skillRegistry));
         }
     }
 

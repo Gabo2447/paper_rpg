@@ -1,7 +1,12 @@
 package com.zabrek.rpgplugin.skills.types;
 
 import com.zabrek.rpgplugin.Skills;
+import com.zabrek.rpgplugin.database.PlayerData;
 import com.zabrek.rpgplugin.skills.SkillBehavior;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
@@ -25,4 +30,7 @@ public class LavaLeatherSkill implements SkillBehavior {
             }
         }
     }
+
+    @Override
+    public void onCommandExecute(Player player, PlayerData playerData) { player.sendMessage(Component.text("Lava Leather", NamedTextColor.DARK_RED)); }
 }

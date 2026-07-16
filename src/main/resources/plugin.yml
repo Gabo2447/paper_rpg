@@ -1,5 +1,5 @@
 name: RPGPlugin
-version: 1.0.0
+version: 1.0.1
 main: com.zabrek.rpgplugin.RPGPlugin
 description: An example plugin
 author: ZabrekMC
@@ -11,7 +11,7 @@ commands:
     description: Open the skill selection menu.
     usage: /skills
     permission: rpgplugin.skills
-  jump:
+  use:
     description: It propels you through the air.
-    usage: /jump
-    permission: rpgplugin.jump
+    usage: /use
+    permission: rpgplugin.use
