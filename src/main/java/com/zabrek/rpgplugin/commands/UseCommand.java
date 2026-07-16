@@ -6,6 +6,7 @@ import com.zabrek.rpgplugin.database.PlayerData;
 import com.zabrek.rpgplugin.skills.SkillBehavior;
 import com.zabrek.rpgplugin.skills.SkillRegistry;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,10 @@ public class UseCommand implements CommandExecutor {
         if (playerData == null) return true;
 
         Skills playerSkill = playerData.getEquippedSkill();
-        if (playerSkill == null) return true;
+        if (playerSkill == null) {
+            sender.sendMessage(Component.text("Select a skill using the “/skills” command to unlock the “/use” command", NamedTextColor.GRAY));
+            return true;
+        }
 
         SkillBehavior behavior = skillRegistry.getBehavior(playerSkill);
         if (behavior == null) return true;
