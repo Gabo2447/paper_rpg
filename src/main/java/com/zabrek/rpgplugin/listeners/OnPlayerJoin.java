@@ -24,6 +24,7 @@ public class OnPlayerJoin implements Listener {
 
         player.sendMessage(Component.text("Hello, " + player.getName() + "!"));
         player.sendMessage(Component.text("TIP: Try using the “/skills” command to select your class", NamedTextColor.GOLD));
+        player.sendMessage(Component.text("If you're going to select your class, you can use the “/use” command."));
     }
 
 }
