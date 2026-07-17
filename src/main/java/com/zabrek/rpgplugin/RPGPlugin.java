@@ -29,13 +29,13 @@ public class RPGPlugin extends JavaPlugin {
 
         pm.registerEvents(new OnPlayerJoin(dataManager), this);
         pm.registerEvents(new OnEntityDamage(dataManager, skillRegistry), this);
-        pm.registerEvents(new OnMenuClick(dataManager), this);
+        pm.registerEvents(new OnMenuClick(dataManager, this), this);
         pm.registerEvents(new OnPlayerQuit(dataManager), this);
 
         // Commands
         PluginCommand SkillsCmd = this.getCommand("skills");
         if (SkillsCmd != null) {
-            SkillsCmd.setExecutor(new SkillsCommand());
+            SkillsCmd.setExecutor(new SkillsCommand(this));
         }
 
         PluginCommand UseCmd = this.getCommand("use");

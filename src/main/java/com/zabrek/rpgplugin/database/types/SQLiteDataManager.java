@@ -56,14 +56,20 @@ public class SQLiteDataManager implements DataManager {
 
     @Override
     public void loadPlayer(UUID id) {
+        PlayerData data = new PlayerData();
+        temporalMemory.put(id, data);
+
         dbExecutor.execute(() -> {
-            PlayerData data = new PlayerData();
 
             String queryPlayer = "SELECT equipped_skill FROM players WHERE uuid = ?;";
             String queryCooldowns = "SELECT skill_id, expiration_time FROM player_cooldowns WHERE uuid = ?;";
 
-            try (Connection conn = getConnection()) {
+            // Local Variables
+            final Skills[] loadedSkill = new Skills[1];
+            Map<String, Long> loadedCooldowns = new HashMap<>();
 
+            try (Connection conn = getConnection()) {
+                // --- Skills block ---
                 try (PreparedStatement stmt = conn.prepareStatement(queryPlayer)) {
                     stmt.setString(1, id.toString());
 
@@ -73,16 +79,16 @@ public class SQLiteDataManager implements DataManager {
 
                             if (savedSkill != null && !savedSkill.equals("none")) {
                                 try {
-                                    data.setEquippedSkill(Skills.valueOf(savedSkill));
+                                    loadedSkill[0] = Skills.valueOf(savedSkill);
                                 } catch (IllegalArgumentException e) {
                                     plugin.getLogger().warning("Invalid skill in DB for" + id + ": " + savedSkill);
-                                    data.setEquippedSkill(null);
                                 }
                             }
                         }
                     }
                 }
 
+                // --- Cooldowns Block ---
                 try (PreparedStatement stmt = conn.prepareStatement(queryCooldowns)) {
                     stmt.setString(1, id.toString());
 
@@ -93,21 +99,22 @@ public class SQLiteDataManager implements DataManager {
                             long expirationTime = rs.getLong("expiration_time");
 
                             if (!(currentTime < expirationTime)) continue;
-                            data.getCooldowns().put(skillKey, expirationTime);
+                            loadedCooldowns.put(skillKey, expirationTime);
                         }
                     }
 
-                } catch (SQLException e) {
-                    plugin.getLogger().severe(e.getMessage());
                 }
-
             } catch (SQLException e) {
                 plugin.getLogger().severe(e.getMessage());
                 e.printStackTrace();
             }
 
             Bukkit.getScheduler().runTask(plugin, () -> {
-                temporalMemory.put(id, data);
+                PlayerData currentData = temporalMemory.get(id);
+                if (currentData != null) {
+                    currentData.setEquippedSkill(loadedSkill[0]);
+                    currentData.getCooldowns().putAll(loadedCooldowns);
+                }
             });
         });
     }
@@ -116,6 +123,9 @@ public class SQLiteDataManager implements DataManager {
     public void savePlayer(UUID id) {
         PlayerData data = temporalMemory.get(id);
         if (data == null) return;
+
+        String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().name() : "none";
+        Map<String, Long> cooldownsCopy = new HashMap<>(data.getCooldowns());
 
         dbExecutor.execute(() -> {
             String sqlPlayer = "INSERT OR REPLACE INTO players (uuid, equipped_skill) VALUES (?, ?);";
@@ -127,8 +137,6 @@ public class SQLiteDataManager implements DataManager {
 
                 try (PreparedStatement stmtPlayer = conn.prepareStatement(sqlPlayer)) {
                     stmtPlayer.setString(1, id.toString());
-
-                    String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().name() : "none";
                     stmtPlayer.setString(2, skillName);
 
                     stmtPlayer.executeUpdate();
@@ -141,7 +149,7 @@ public class SQLiteDataManager implements DataManager {
 
                 long currentTime = System.currentTimeMillis();
                 try (PreparedStatement stmtCooldowns = conn.prepareStatement(sqlInsertCooldowns)) {
-                    for (Map.Entry<String, Long> entry : data.getCooldowns().entrySet()) {
+                    for (Map.Entry<String, Long> entry : cooldownsCopy.entrySet()) {
                         long expiration = entry.getValue();
 
                         if (currentTime < expiration) {

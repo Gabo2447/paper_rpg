@@ -31,6 +31,8 @@ public class ManaController implements Consumer<BukkitTask> {
 
         for (Player player : players) {
             PlayerData playerData = data.getPlayerData(player.getUniqueId());
+            if (playerData == null) continue;
+
             playerData.getMana().addMana(ADD_MANA_PER_CYCLE);
             VisualController.sendManaBar(player, playerData.getMana());
         }
