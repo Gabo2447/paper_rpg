@@ -1,5 +1,5 @@
 name: RPGPlugin
-version: 1.1.0
+version: 1.1.1
 main: com.zabrek.rpgplugin.RPGPlugin
 description: An example plugin
 author: ZabrekMC
