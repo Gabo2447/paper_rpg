@@ -2,6 +2,7 @@ package com.zabrek.rpgplugin.infraestructure.minecraft.commands;
 
 import com.zabrek.rpgplugin.application.ports.out.PlayerRepository;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
+import com.zabrek.rpgplugin.domain.model.SkillProperties;
 import com.zabrek.rpgplugin.infraestructure.minecraft.skills.SkillBehavior;
 import com.zabrek.rpgplugin.infraestructure.minecraft.skills.SkillRegistry;
 import com.zabrek.rpgplugin.domain.Skills;
@@ -43,7 +44,10 @@ public class UseCommand implements CommandExecutor {
         SkillBehavior behavior = skillRegistry.getBehavior(playerSkill);
         if (behavior == null) return true;
 
-        behavior.onCommandExecute(player, playerData);
+        SkillProperties props = skillRegistry.getProperties(playerSkill);
+        if (props == null) return true;
+
+        behavior.onCommandExecute(player, playerData, props);
         return true;
     }
 }

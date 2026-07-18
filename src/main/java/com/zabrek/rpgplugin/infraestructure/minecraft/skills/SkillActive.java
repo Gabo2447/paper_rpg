@@ -1,5 +1,6 @@
 package com.zabrek.rpgplugin.infraestructure.minecraft.skills;
 
+import com.zabrek.rpgplugin.domain.model.SkillProperties;
 import com.zabrek.rpgplugin.infraestructure.minecraft.controllers.VisualController;
 import com.zabrek.rpgplugin.domain.model.Mana;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
@@ -12,15 +13,14 @@ import org.bukkit.entity.Player;
 public abstract class SkillActive implements SkillBehavior {
 
     @Override
-    public final void onCommandExecute(Player player, PlayerData playerData) {
+    public final void onCommandExecute(Player player, PlayerData playerData, SkillProperties props) {
         Skills skill = getSkillType();
-
-        int COST_MANA = skill.getManaCost();
-        long COOLDOWN_SECONDS = skill.getCooldownTime();
+        int costMana = props.getManaCost();
+        long cooldownSeconds = props.getCooldownTime();
 
         Mana playerMana = playerData.getMana();
 
-        if (playerMana.getMana() < COST_MANA) {
+        if (playerMana.getMana() < costMana) {
             player.sendMessage(Component.text("You don't have enough mana!", NamedTextColor.RED));
             return;
         }
@@ -32,10 +32,9 @@ public abstract class SkillActive implements SkillBehavior {
             return;
         }
 
-        if (executeActiveEffect(player, playerData)) {
-            playerData.addCooldown(skill.name(), COOLDOWN_SECONDS);
-
-            playerMana.subMana(COST_MANA);
+        if (executeActiveEffect(player, playerData, props)) {
+            playerData.addCooldown(skill.name(), cooldownSeconds);
+            playerMana.subMana(costMana);
             VisualController.sendManaBar(player, playerMana);
         }
     }
@@ -44,5 +43,5 @@ public abstract class SkillActive implements SkillBehavior {
      * Defines the physical or logical effect of the active ability
      * @return true if the ability was executed successfully and a cooldown should be applied; false otherwise.
      */
-    protected abstract boolean executeActiveEffect(Player player, PlayerData playerData);
+    protected abstract boolean executeActiveEffect(Player player, PlayerData playerData, SkillProperties props);
 }

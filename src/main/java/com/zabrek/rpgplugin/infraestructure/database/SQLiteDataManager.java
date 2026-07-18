@@ -79,18 +79,18 @@ public class SQLiteDataManager implements PlayerRepository {
 
                     try (ResultSet rs = stmt.executeQuery()) {
                         if (rs.next()) {
-                            String savedSkill = rs.getString("equipped_skill");
+                            String skillId = rs.getString("equipped_skill");
+                            Skills skill = (skillId != null && !skillId.equals("none")) ? Skills.fromId(skillId) : null;
 
-                            if (savedSkill != null && !savedSkill.equals("none")) {
-                                try {
-                                    loadedSkill[0] = Skills.valueOf(savedSkill);
-                                } catch (IllegalArgumentException e) {
-                                    plugin.getLogger().warning("Invalid skill in DB for" + id + ": " + savedSkill);
-                                }
+                            try {
+                                loadedSkill[0] = skill;
+                            } catch (IllegalArgumentException e) {
+                                plugin.getLogger().warning("Invalid skill in DB for" + id + ": " + skill);
                             }
                         }
                     }
                 }
+
 
                 // --- Cooldowns Block ---
                 try (PreparedStatement stmt = conn.prepareStatement(queryCooldowns)) {
@@ -128,59 +128,73 @@ public class SQLiteDataManager implements PlayerRepository {
         PlayerData data = temporalMemory.get(id);
         if (data == null) return;
 
-        String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().name() : "none";
+        String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().getId() : "none";
         Map<String, Long> cooldownsCopy = new HashMap<>(data.getCooldowns());
 
-        dbExecutor.execute(() -> {
-            String sqlPlayer = "INSERT OR REPLACE INTO players (uuid, equipped_skill) VALUES (?, ?);";
-            String sqlCLearCooldowns = "DELETE FROM player_cooldowns WHERE uuid = ?;";
-            String sqlInsertCooldowns = "INSERT OR REPLACE INTO player_cooldowns (uuid, skill_id, expiration_time) VALUES (?, ?, ?);";
+        dbExecutor.execute(() -> executeDatabaseSave(id, skillName, cooldownsCopy));
+    }
 
-            try(Connection conn = getConnection()) {
-                conn.setAutoCommit(false); // One time
+    private void executeDatabaseSave(UUID id, String skillName, Map<String, Long> cooldownsCopy) {
+        String sqlPlayer = "INSERT OR REPLACE INTO players (uuid, equipped_skill) VALUES (?, ?);";
+        String sqlCLearCooldowns = "DELETE FROM player_cooldowns WHERE uuid = ?;";
+        String sqlInsertCooldowns = "INSERT OR REPLACE INTO player_cooldowns (uuid, skill_id, expiration_time) VALUES (?, ?, ?);";
 
-                try (PreparedStatement stmtPlayer = conn.prepareStatement(sqlPlayer)) {
-                    stmtPlayer.setString(1, id.toString());
-                    stmtPlayer.setString(2, skillName);
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
 
-                    stmtPlayer.executeUpdate();
-                }
-
-                try (PreparedStatement stmtClear = conn.prepareStatement(sqlCLearCooldowns)) {
-                    stmtClear.setString(1, id.toString());
-                    stmtClear.executeUpdate();
-                }
-
-                long currentTime = System.currentTimeMillis();
-                try (PreparedStatement stmtCooldowns = conn.prepareStatement(sqlInsertCooldowns)) {
-                    for (Map.Entry<String, Long> entry : cooldownsCopy.entrySet()) {
-                        long expiration = entry.getValue();
-
-                        if (currentTime < expiration) {
-                            stmtCooldowns.setString(1, id.toString());
-                            stmtCooldowns.setString(2, entry.getKey());
-                            stmtCooldowns.setLong(3, expiration);
-
-                            stmtCooldowns.addBatch();
-                        }
-                    }
-
-                    stmtCooldowns.executeBatch();
-                }
-
-                conn.commit();
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                plugin.getLogger().severe(e.getMessage());
+            try (PreparedStatement stmtPlayer = conn.prepareStatement(sqlPlayer)) {
+                stmtPlayer.setString(1, id.toString());
+                stmtPlayer.setString(2, skillName);
+                stmtPlayer.executeUpdate();
             }
-        });
+
+            try (PreparedStatement stmtClear = conn.prepareStatement(sqlCLearCooldowns)) {
+                stmtClear.setString(1, id.toString());
+                stmtClear.executeUpdate();
+            }
+
+            long currentTime = System.currentTimeMillis();
+            try (PreparedStatement stmtCooldowns = conn.prepareStatement(sqlInsertCooldowns)) {
+                for (Map.Entry<String, Long> entry : cooldownsCopy.entrySet()) {
+                    long expiration = entry.getValue();
+
+                    if (currentTime < expiration) {
+                        stmtCooldowns.setString(1, id.toString());
+                        stmtCooldowns.setString(2, entry.getKey());
+                        stmtCooldowns.setLong(3, expiration);
+                        stmtCooldowns.addBatch();
+                    }
+                }
+                stmtCooldowns.executeBatch();
+            }
+
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Error saving player " + id + ": " + e.getMessage());
+        }
     }
 
     @Override
     public void saveAll(boolean clearCache) {
-        for (UUID id : new HashMap<>(temporalMemory).keySet()) { savePlayer(id); }
         if (clearCache) {
+            plugin.getLogger().info("Saving all players synchronously before shutdown...");
+
+            for (Map.Entry<UUID, PlayerData> entry : temporalMemory.entrySet()) {
+                UUID id = entry.getKey();
+                PlayerData data = entry.getValue();
+
+                String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().getId() : "none";
+                Map<String, Long> cooldownsCopy = new HashMap<>(data.getCooldowns());
+
+                executeDatabaseSave(id, skillName, cooldownsCopy);
+            }
+
             temporalMemory.clear();
+        } else {
+            for (UUID id : temporalMemory.keySet()) {
+                savePlayer(id);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.zabrek.rpgplugin.infraestructure.minecraft.skills.types;
 
 import com.zabrek.rpgplugin.domain.model.PlayerData;
 import com.zabrek.rpgplugin.domain.Skills;
+import com.zabrek.rpgplugin.domain.model.SkillProperties;
 import com.zabrek.rpgplugin.infraestructure.minecraft.skills.SkillActive;
 
 import net.kyori.adventure.text.Component;
@@ -26,7 +27,7 @@ public class WindLeapSkill extends SkillActive {
     }
 
     @Override
-    protected boolean executeActiveEffect(Player player, PlayerData playerData) {
+    protected boolean executeActiveEffect(Player player, PlayerData playerData, SkillProperties props) {
         if (player.isGliding()) {
             player.sendMessage(Component.text("You can't use your ability while gliding!", NamedTextColor.RED));
             return false;

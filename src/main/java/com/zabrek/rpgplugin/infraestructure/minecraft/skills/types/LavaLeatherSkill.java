@@ -2,6 +2,7 @@ package com.zabrek.rpgplugin.infraestructure.minecraft.skills.types;
 
 import com.zabrek.rpgplugin.domain.Skills;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
+import com.zabrek.rpgplugin.domain.model.SkillProperties;
 import com.zabrek.rpgplugin.infraestructure.minecraft.skills.SkillBehavior;
 
 import net.kyori.adventure.text.Component;
@@ -32,5 +33,5 @@ public class LavaLeatherSkill implements SkillBehavior {
     }
 
     @Override
-    public void onCommandExecute(Player player, PlayerData playerData) { player.sendMessage(Component.text("Lava Leather", NamedTextColor.DARK_RED)); }
+    public void onCommandExecute(Player player, PlayerData playerData, SkillProperties props) { player.sendMessage(Component.text("Lava Leather", NamedTextColor.DARK_RED)); }
 }

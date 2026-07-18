@@ -20,7 +20,7 @@ public class OnEntityDamage implements Listener {
         this.skillRegistry = skillRegistry;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
             PlayerData playerData = dataManager.getPlayerData(player.getUniqueId());

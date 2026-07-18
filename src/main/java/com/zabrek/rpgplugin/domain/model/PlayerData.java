@@ -1,8 +1,8 @@
 package com.zabrek.rpgplugin.domain.model;
 
 import com.zabrek.rpgplugin.domain.Skills;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerData {
     private Skills equippedSkill;
@@ -12,7 +12,7 @@ public class PlayerData {
     public PlayerData() {
         this.mana = new Mana();
         this.equippedSkill = null;
-        this.cooldowns = new HashMap<>();
+        this.cooldowns = new ConcurrentHashMap<>();
     }
 
     public Mana getMana() { return mana; }
@@ -26,8 +26,13 @@ public class PlayerData {
     }
 
     public boolean isOnCooldown(String skill) {
-        if (!cooldowns.containsKey(skill)) return false;
-        return System.currentTimeMillis() < cooldowns.get(skill);
+        Long expiration = cooldowns.get(skill);
+        if (expiration == null) return false;
+
+        if (System.currentTimeMillis() < expiration) return true;
+
+        cooldowns.remove(skill);
+        return false;
     }
 
     public void addCooldown(String skill, long seg) {

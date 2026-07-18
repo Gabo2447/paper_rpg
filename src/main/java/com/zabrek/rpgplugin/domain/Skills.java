@@ -1,20 +1,24 @@
 package com.zabrek.rpgplugin.domain;
 
 public enum Skills {
-    LAVA_LEATHER("Lava Leather", 15, 10),
-    WIND_LEAP("Wind Leap", 20, 10);
+    LAVA_LEATHER("Lava Leather", "LAVA_LEATHER"),
+    WIND_LEAP("Wind Leap", "WIND_LEAP");
 
     private final String displayName;
-    private final int manaCost;
-    private final long cooldownTime;
+    private final String id;
 
-    Skills(String displayName, int manaCost, long cooldownTime) {
+    Skills(String displayName, String id) {
         this.displayName = displayName;
-        this.manaCost = manaCost;
-        this.cooldownTime = cooldownTime;
+        this.id = id;
     };
 
+    public String getId() { return id; }
     public String getDisplayName() { return displayName; }
-    public int getManaCost() { return manaCost; }
-    public long getCooldownTime() { return cooldownTime; }
+
+    public static Skills fromId(String id) {
+        for (Skills skill : values()) {
+            if (skill.id.equalsIgnoreCase(id)) return skill;
+        }
+        return null;
+    }
 }
