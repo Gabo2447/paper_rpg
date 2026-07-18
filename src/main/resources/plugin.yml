@@ -1,7 +1,7 @@
 name: RPGPlugin
 version: 1.1.1
-main: com.zabrek.rpgplugin.RPGPlugin
-description: An example plugin
+main: com.zabrek.rpgplugin.infraestructure.RPGPlugin
+description: RPG plugin for Paper
 author: ZabrekMC
 website: https://papermc.io
 api-version: '26.2'
