@@ -15,7 +15,7 @@ public class StreakOfGoodLuckSkill implements SkillBehavior {
     public Skills getSkillType() { return Skills.STREAK_OF_GOOD_LUCK; }
 
     @Override
-    public void onDamage(EntityDamageEvent event, Player player) {}
+    public void onDamage(EntityDamageEvent event, Player player, PlayerData playerData) {}
 
     @Override
     public void onCommandExecute(Player player, PlayerData playerData, SkillProperties props) {

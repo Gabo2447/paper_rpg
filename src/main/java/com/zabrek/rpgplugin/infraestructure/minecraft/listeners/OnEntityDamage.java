@@ -32,7 +32,7 @@ public class OnEntityDamage implements Listener {
             SkillBehavior behavior = skillRegistry.getBehavior(playerSkill);
             if (behavior == null) return;
 
-            behavior.onDamage(event, player);
+            behavior.onDamage(event, player, playerData);
         }
     }
 }

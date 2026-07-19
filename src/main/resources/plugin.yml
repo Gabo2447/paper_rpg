@@ -6,6 +6,11 @@ author: ZabrekMC
 website: https://papermc.io
 api-version: '26.2'
 
+settings:
+  attribute:
+    maxDamage:
+      max: 2048.0
+
 libraries:
   - com.zaxxer:HikariCP:7.1.0
 

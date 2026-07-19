@@ -9,6 +9,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public interface SkillBehavior {
     Skills getSkillType();
-    void onDamage(EntityDamageEvent event, Player player);
+    void onDamage(EntityDamageEvent event, Player player, PlayerData playerData);
     void onCommandExecute(Player player, PlayerData playerData, SkillProperties props);
 }

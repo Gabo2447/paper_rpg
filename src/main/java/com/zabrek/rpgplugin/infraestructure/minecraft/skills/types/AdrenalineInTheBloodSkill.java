@@ -14,7 +14,7 @@ public class AdrenalineInTheBloodSkill implements SkillBehavior {
     public Skills getSkillType() { return Skills.ADRENALINE_IN_THE_BLOOD; }
 
     @Override
-    public void onDamage(EntityDamageEvent event, Player player) {}
+    public void onDamage(EntityDamageEvent event, Player player, PlayerData playerData) {}
 
     @Override
     public void onCommandExecute(Player player, PlayerData playerData, SkillProperties props) {
