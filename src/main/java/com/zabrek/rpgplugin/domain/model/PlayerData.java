@@ -1,12 +1,14 @@
 package com.zabrek.rpgplugin.domain.model;
 
 import com.zabrek.rpgplugin.domain.Skills;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerData {
     private Skills equippedSkill;
     private final Map<String, Long> cooldowns;
+    private final Map<String, SkillProgress> skillMatrix = new ConcurrentHashMap<>();
     private final Mana mana;
 
     public PlayerData() {
@@ -20,6 +22,7 @@ public class PlayerData {
         return equippedSkill;
     }
     public Map<String, Long> getCooldowns() { return cooldowns; }
+    public Map<String, SkillProgress> getSkillProperties() { return skillMatrix; }
 
     public void setEquippedSkill(Skills equippedSkill) {
         this.equippedSkill = equippedSkill;
