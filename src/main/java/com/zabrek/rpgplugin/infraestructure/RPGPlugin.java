@@ -1,5 +1,6 @@
 package com.zabrek.rpgplugin.infraestructure;
 
+import com.zabrek.rpgplugin.domain.shared.DomainRules;
 import com.zabrek.rpgplugin.infraestructure.minecraft.commands.SkillsCommand;
 import com.zabrek.rpgplugin.infraestructure.minecraft.commands.UseCommand;
 import com.zabrek.rpgplugin.infraestructure.minecraft.controllers.ManaController;
@@ -8,6 +9,7 @@ import com.zabrek.rpgplugin.infraestructure.database.SQLiteDataManager;
 import com.zabrek.rpgplugin.infraestructure.minecraft.listeners.*;
 import com.zabrek.rpgplugin.infraestructure.minecraft.skills.SkillRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,8 +31,8 @@ public class RPGPlugin extends JavaPlugin {
         Bukkit.getScheduler().runTaskTimer(this, this.manaController, 0L, 40L);
 
         pm.registerEvents(new OnPlayerJoin(), this);
+        pm.registerEvents(new OnMenuClick(dataManager), this);
         pm.registerEvents(new OnPlayerConfiguration(dataManager), this);
-        pm.registerEvents(new OnMenuClick(dataManager, this), this);
         pm.registerEvents(new OnPlayerQuit(dataManager), this);
         pm.registerEvents(new OnEntityDamage(dataManager, skillRegistry), this);
         pm.registerEvents(new OnEntityDeath(dataManager, this), this);

@@ -1,8 +1,14 @@
 package com.zabrek.rpgplugin.domain;
 
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
+
 public enum Skills {
-    LAVA_LEATHER("Lava Leather", "LAVA_LEATHER"),
-    WIND_LEAP("Wind Leap", "WIND_LEAP");
+    SEISMIC_IMPACT("Seismic Impact", "seismic_impact"),
+    STREAK_OF_GOOD_LUCK("Streak of Good Luck", "streak_of_good_luck"),
+    PIERCING_ARROW("Piercing Arrow", "piercing_arrow"),
+    ADRENALINE_IN_THE_BLOOD("Adrenaline in the Blood", "adrenaline_in_the_blood"),
+    OBSIDIAN_SKIN("Obsidian Skin", "obsidian_skin");
 
     private final String displayName;
     private final String id;
@@ -11,6 +17,10 @@ public enum Skills {
         this.displayName = displayName;
         this.id = id;
     };
+
+    public void execute(Player player) {
+        player.sendMessage(Component.text(this.displayName + " selected"));
+    }
 
     public String getId() { return id; }
     public String getDisplayName() { return displayName; }

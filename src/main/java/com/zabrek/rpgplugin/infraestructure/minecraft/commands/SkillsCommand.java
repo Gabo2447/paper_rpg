@@ -1,7 +1,7 @@
 package com.zabrek.rpgplugin.infraestructure.minecraft.commands;
 
 import com.zabrek.rpgplugin.infraestructure.RPGPlugin;
-import com.zabrek.rpgplugin.infraestructure.minecraft.commands.inventory.SkillsMenuHolder;
+import com.zabrek.rpgplugin.infraestructure.minecraft.commands.inventory.SkillsMenu;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.command.Command;
@@ -24,7 +24,7 @@ public class SkillsCommand implements CommandExecutor {
             return true;
         }
 
-        player.openInventory(new SkillsMenuHolder(plugin).getInventory());
+        player.openInventory(new SkillsMenu(player, plugin).getInventory());
         return true;
     }
 }
