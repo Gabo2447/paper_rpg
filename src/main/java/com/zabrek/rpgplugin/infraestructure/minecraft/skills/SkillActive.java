@@ -6,8 +6,10 @@ import com.zabrek.rpgplugin.domain.model.Mana;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
 import com.zabrek.rpgplugin.domain.Skills;
 
+import com.zabrek.rpgplugin.infraestructure.minecraft.utils.VisualEffectUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public abstract class SkillActive implements SkillBehavior {
@@ -28,6 +30,7 @@ public abstract class SkillActive implements SkillBehavior {
         if (playerData.isOnCooldown(skill.name())) {
             long actualTime = System.currentTimeMillis();
             int segRemain = (int) (playerData.getCooldowns().get(skill.name()) - actualTime) / 1000;
+            VisualEffectUtil.playSoundPlayer(player, Sound.BLOCK_FIRE_EXTINGUISH);
             player.sendMessage(Component.text("Your ability is still on cooldown! Remaining... " + segRemain + "s...", NamedTextColor.YELLOW));
             return;
         }

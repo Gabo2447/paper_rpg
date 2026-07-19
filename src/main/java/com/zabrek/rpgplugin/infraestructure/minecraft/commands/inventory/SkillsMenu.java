@@ -4,11 +4,13 @@ import com.zabrek.rpgplugin.application.ports.out.PlayerRepository;
 import com.zabrek.rpgplugin.domain.Skills;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
 import com.zabrek.rpgplugin.infraestructure.RPGPlugin;
+import com.zabrek.rpgplugin.infraestructure.minecraft.utils.VisualEffectUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -97,17 +99,21 @@ public class SkillsMenu extends RPGMenu {
 
             if (selectedSkill == null) {
                 player.sendMessage(Component.text("Error: Skill not found in domain", NamedTextColor.RED));
+                VisualEffectUtil.playSoundPlayer(player, Sound.BLOCK_NOTE_BLOCK_CHIME);
                 return;
             }
 
             PlayerData playerData = dataManager.getPlayerData(player.getUniqueId());
             if (playerData == null) {
                 player.sendMessage(Component.text("Error: Player data not loaded yet"));
+                VisualEffectUtil.playSoundPlayer(player, Sound.BLOCK_NOTE_BLOCK_CHIME);
                 return;
             }
 
             playerData.setEquippedSkill(selectedSkill);
             selectedSkill.execute(player);
+
+            VisualEffectUtil.playSoundPlayer(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
             player.closeInventory();
         }
     }

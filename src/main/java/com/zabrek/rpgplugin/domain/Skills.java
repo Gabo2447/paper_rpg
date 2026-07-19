@@ -1,6 +1,7 @@
 package com.zabrek.rpgplugin.domain;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 public enum Skills {
@@ -19,7 +20,7 @@ public enum Skills {
     };
 
     public void execute(Player player) {
-        player.sendMessage(Component.text(this.displayName + " selected"));
+        player.sendMessage(Component.text(this.displayName + " selected", NamedTextColor.GREEN));
     }
 
     public String getId() { return id; }

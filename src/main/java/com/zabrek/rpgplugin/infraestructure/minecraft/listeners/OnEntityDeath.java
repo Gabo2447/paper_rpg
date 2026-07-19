@@ -33,8 +33,6 @@ public class OnEntityDeath implements Listener {
             Skills equippedSkill = data.getEquippedSkill();
             if (equippedSkill == null) return;
 
-            player.sendMessage("XP");
-
             Map<String, SkillProgress> skillProgressMap = data.getSkillProperties();
 
             SkillProgress skillProgress = skillProgressMap.computeIfAbsent(
