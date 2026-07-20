@@ -15,7 +15,7 @@ public class ManaController implements Consumer<BukkitTask> {
     private final PlayerRepository data;
 
     private volatile boolean running = true;
-    private int ADD_MANA_PER_CYCLE = 10;
+    private final int ADD_MANA_PER_CYCLE = 10;
 
     public ManaController(RPGPlugin plugin, PlayerRepository dataManager) {
         this.plugin = plugin;

@@ -27,16 +27,18 @@ public abstract class SkillActive implements SkillBehavior {
             return;
         }
 
-        if (playerData.isOnCooldown(skill.name())) {
-            long actualTime = System.currentTimeMillis();
-            int segRemain = (int) (playerData.getCooldowns().get(skill.name()) - actualTime) / 1000;
+
+        if (playerData.isSkillOnCooldown(skill)) {
+            long remainingMillis = playerData.getRemainingCooldownsMillis(skill);
+            int segRemain = (int) (remainingMillis / 1000);
+
             VisualEffectUtil.playSoundPlayer(player, Sound.BLOCK_FIRE_EXTINGUISH);
             player.sendMessage(Component.text("Your ability is still on cooldown! Remaining... " + segRemain + "s...", NamedTextColor.YELLOW));
             return;
         }
 
         if (executeActiveEffect(player, playerData, props)) {
-            playerData.addCooldown(skill.name(), cooldownSeconds);
+            playerData.applyCooldown(skill, cooldownSeconds);
             playerMana.subMana(costMana);
             VisualController.sendManaBar(player, playerMana);
         }

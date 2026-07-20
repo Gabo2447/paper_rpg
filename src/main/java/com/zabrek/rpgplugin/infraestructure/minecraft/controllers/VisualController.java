@@ -18,7 +18,7 @@ public class VisualController {
     }
 
     public static void sendLevelBar(RPGPlugin plugin, Player player, SkillProgress skillProgress) {
-        double req = 100 * Math.pow(skillProgress.getLevel(), 1.5);
+        double req = 100 * Math.pow(skillProgress.getLevel(), 1.5); // 100 * (level ** 1.5)
         float progressFraction = (float) Math.clamp(skillProgress.getExperience() / req, 0.0, 1.0);
 
         Component title = Component.text("Progress Skill - Level ", NamedTextColor.GREEN)
