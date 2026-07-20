@@ -3,12 +3,11 @@ package com.zabrek.rpgplugin.infraestructure.database;
 import com.zabrek.rpgplugin.application.ports.out.PlayerRepository;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
 import com.zabrek.rpgplugin.domain.model.SkillProgress;
-import com.zabrek.rpgplugin.domain.model.SkillProperties;
+
 import com.zabrek.rpgplugin.infraestructure.RPGPlugin;
 import com.zabrek.rpgplugin.domain.Skills;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.sql.Connection;
@@ -18,6 +17,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +35,7 @@ public class SQLiteDataManager implements PlayerRepository {
 
     public SQLiteDataManager(RPGPlugin plugin) {
         this.plugin = plugin;
-        this.temporalMemory = new HashMap<>();
+        this.temporalMemory = new ConcurrentHashMap<>();
         this.config = new HikariDataSource();
     }
 
@@ -43,8 +43,9 @@ public class SQLiteDataManager implements PlayerRepository {
     public void setup() {
 
         // Check to see if the “plugins” folder exists; if it doesn't, create it.
-        if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdir();
+        File folder = plugin.getDataFolder();
+        if (!folder.exists() && !folder.mkdirs()) {
+            plugin.getLogger().severe("The plugin's data folder could not be created!");
         }
 
         // Hikaru is configured with WAL enabled and a 5-second timeout
@@ -80,12 +81,13 @@ public class SQLiteDataManager implements PlayerRepository {
                     try (ResultSet rs = stmt.executeQuery()) {
                         if (rs.next()) {
                             String skillId = rs.getString("equipped_skill");
-                            Skills skill = (skillId != null && !skillId.equals("none")) ? Skills.fromId(skillId) : null;
-
-                            try {
-                                loadedSkill[0] = skill;
-                            } catch (IllegalArgumentException e) {
-                                plugin.getLogger().warning("Invalid skill in DB for" + id + ": " + skill);
+                            if (skillId != null && !skillId.equals("none")) {
+                                try {
+                                    loadedSkill[0] = Skills.fromId(skillId);
+                                } catch (IllegalArgumentException e) {
+                                    plugin.getLogger().warning("Invalid skill ID in DB for " + id + ": " + skillId);
+                                    loadedSkill[0] = null;
+                                }
                             }
                         }
                     }
@@ -123,16 +125,15 @@ public class SQLiteDataManager implements PlayerRepository {
                 }
             } catch (SQLException e) {
                 plugin.getLogger().severe(e.getMessage());
-                e.printStackTrace();
             }
 
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                PlayerData data = new PlayerData();
-                data.setEquippedSkill(loadedSkill[0]);
-                data.getCooldowns().putAll(loadedCooldowns);
-                data.getSkillProperties().putAll(loadedLevel);
-                temporalMemory.put(id, data);
-            });
+            PlayerData data = new PlayerData();
+
+            data.setEquippedSkill(loadedSkill[0]);
+            data.convertAndLoadCooldowns(loadedCooldowns);
+            data.convertAndLoadLevels(loadedLevel);
+
+            temporalMemory.put(id, data);
         });
     }
 
@@ -141,9 +142,9 @@ public class SQLiteDataManager implements PlayerRepository {
         PlayerData data = temporalMemory.get(id);
         if (data == null) return;
 
-        String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().getId() : "none";
-        Map<String, Long> cooldownsCopy = new HashMap<>(data.getCooldowns());
-        Map<String, SkillProgress> levelsCopy = new HashMap<>(data.getSkillProperties());
+        String skillName = data.hasSkillEquipped() ? data.getEquippedSkill().getId() : "none";
+        Map<String, Long> cooldownsCopy = data.getCooldownsView();
+        Map<String, SkillProgress> levelsCopy = data.getSkillPropertiesView();
 
         dbExecutor.execute(() -> executeDatabaseSave(id, skillName, cooldownsCopy, levelsCopy));
     }
@@ -169,7 +170,7 @@ public class SQLiteDataManager implements PlayerRepository {
                     if (progress == null) continue;
 
                     stmtLevel.setString(1, id.toString());
-                    stmtLevel.setString(2, entry.getKey()); // El ID de la habilidad
+                    stmtLevel.setString(2, entry.getKey());
                     stmtLevel.setInt(3, progress.getLevel());
                     stmtLevel.setInt(4, (int) progress.getExperience());
                     stmtLevel.addBatch();
@@ -214,16 +215,22 @@ public class SQLiteDataManager implements PlayerRepository {
                 PlayerData data = entry.getValue();
 
                 String skillName = (data.getEquippedSkill() != null) ? data.getEquippedSkill().getId() : "none";
-                Map<String, Long> cooldownsCopy = new HashMap<>(data.getCooldowns());
-                Map<String, SkillProgress> levelProgress = new HashMap<>(data.getSkillProperties());
+                Map<String, Long> cooldownsCopy = data.getCooldownsView();
+                Map<String, SkillProgress> levelProgress = data.getSkillPropertiesView();
 
                 executeDatabaseSave(id, skillName, cooldownsCopy, levelProgress);
             }
 
             temporalMemory.clear();
         } else {
-            for (UUID id : temporalMemory.keySet()) {
-                savePlayer(id);
+            for (Map.Entry<UUID, PlayerData> entry : temporalMemory.entrySet()) {
+                UUID id = entry.getKey();
+                PlayerData data = entry.getValue();
+
+                String skillName = data.hasSkillEquipped() ? data.getEquippedSkill().getId() : "none";
+                Map<String, Long> cooldownsCopy = data.getCooldownsView();
+                Map<String, SkillProgress> levelProgress = data.getSkillPropertiesView();
+                dbExecutor.execute(() -> executeDatabaseSave(id, skillName, cooldownsCopy, levelProgress));
             }
         }
     }
@@ -269,7 +276,7 @@ public class SQLiteDataManager implements PlayerRepository {
             Thread.currentThread().interrupt();
         }
 
-        if (config != null && !config.isClosed()) {
+        if (!config.isClosed()) {
             config.close();
         }
     }
