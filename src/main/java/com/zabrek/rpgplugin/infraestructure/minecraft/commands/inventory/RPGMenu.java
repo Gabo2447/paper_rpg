@@ -6,12 +6,14 @@ import com.zabrek.rpgplugin.application.ports.out.PlayerRepository;
 import com.zabrek.rpgplugin.domain.Skills;
 import com.zabrek.rpgplugin.domain.shared.DomainRules;
 import com.zabrek.rpgplugin.infraestructure.RPGPlugin;
+
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -73,7 +75,8 @@ public abstract class RPGMenu implements InventoryHolder {
     }
 
     protected ItemStack createCustomHead(String urlBase64, Skills skill, List<Component> lore) {
-        Component title = Component.text(skill.getDisplayName());
+        String gradientTag = getGradientForSkill(skill);
+        Component title = MiniMessage.miniMessage().deserialize(gradientTag + skill.getDisplayName() + "</gradient>");
         String id = skill.getId();
 
         // Create item
@@ -108,6 +111,17 @@ public abstract class RPGMenu implements InventoryHolder {
         return panel;
     }
 
+    private String getGradientForSkill(Skills skill) {
+        return switch (skill) {
+            case OBSIDIAN_SKIN -> "<gradient:#4f3b78:#927fbf>";           // Dark purple/obsidian to lavender
+            case PIERCING_ARROW -> "<gradient:#f9d423:#ff4e50>";          // From bright yellow to arrow red
+            case SEISMIC_IMPACT -> "<gradient:#FF416C:#FF4B2B>";          // Destructor Red / Magma
+            case ADRENALINE_IN_THE_BLOOD -> "<gradient:#e65c00:#F9D423>"; // Blood-orange to blood-yellow
+            case STREAK_OF_GOOD_LUCK -> "<gradient:#11998e:#38ef7d>";     // Emerald green / lucky clover
+            default -> "<gradient:#ffffff:#aaaaaa>";                      // White/Gray, just in case
+        };
+    }
+
     protected ItemStack createEnchantedItem(ItemStack item, String name) {
         ItemMeta meta = item.getItemMeta();
 
@@ -118,5 +132,11 @@ public abstract class RPGMenu implements InventoryHolder {
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    protected List<Component> buildLore(String... lines) {
+        return java.util.Arrays.stream(lines)
+                .map(line -> MiniMessage.miniMessage().deserialize("<italic:false><gray>" + line + "</gray>"))
+                .toList();
     }
 }
