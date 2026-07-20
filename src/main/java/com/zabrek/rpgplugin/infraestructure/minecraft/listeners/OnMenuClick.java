@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class OnMenuClick implements Listener {
-    private PlayerRepository dataManager;
+    private final PlayerRepository dataManager;
 
     public OnMenuClick(PlayerRepository dataManager) {
         this.dataManager = dataManager;
