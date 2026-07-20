@@ -5,11 +5,12 @@ import com.zabrek.rpgplugin.domain.Skills;
 import com.zabrek.rpgplugin.domain.model.PlayerData;
 import com.zabrek.rpgplugin.infraestructure.RPGPlugin;
 import com.zabrek.rpgplugin.infraestructure.minecraft.utils.VisualEffectUtil;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,13 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SkillsMenu extends RPGMenu {
-    private final Player menuOwner;
 
     public SkillsMenu(Player player, RPGPlugin plugin) {
         super(plugin);
 
-        this.inventory = Bukkit.createInventory(this, 9 * 4, "My Skills");
-        this.menuOwner = player;
+        this.inventory = Bukkit.createInventory(this, 9 * 4, Component.text("Skills Menu"));
         setMenuItems(player);
     }
 
@@ -52,29 +51,34 @@ public class SkillsMenu extends RPGMenu {
         String textureHeart = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGE2ZjYyOTNlMjMxZmY0MzMxNGQ4NzUwN2QyZjMxMGE5MDFlYzM0NGIyY2RmM2ZkYWY0NGZiNjkyMTQxMDgyZSJ9fX0=";
 
         // Item - Seismic Impact
-        List<Component> loreSeismicImpact = List.of(
-                Component.text("• When you fall, you generate a Shockwave that deals damage as you fall")
+        List<Component> loreSeismicImpact = buildLore(
+                "• When you fall, you generate a Shockwave",
+                "that deals damage as you fall"
         );
 
         // Item - Streak of Good Luck
-        List<Component> loreStreakOfGoodLuck = List.of(
-                Component.text("• There is a chance that when the block breaks, it will break along with all the ore")
+        List<Component> loreStreakOfGoodLuck = buildLore(
+                "• There is a chance that when the block breaks,",
+                "it will break along with all the ore"
         );
 
         // Item - Piercing Arrow
-        List<Component> lorePiercingArrow = List.of(
-                Component.text("• The bow has a chance that, when an arrow is fired, it will pass through all enemies")
+        List<Component> lorePiercingArrow = buildLore(
+                "• The bow has a chance that, when an arrow is",
+                "fired, it will pass through all enemies"
         );
 
         // Item - Adrenaline in the Blood
-        List<Component> loreAdrenaline = List.of(
-                Component.text("• If your health drops below 30%, your speed and damage increase for a few seconds")
+        List<Component> loreAdrenaline = buildLore(
+                "• If your health drops below 30%, your speed and ",
+                "damage increase for a few seconds"
         );
 
         // Item - Obsidian Skin
-        List<Component> loreObsidianSkin = List.of(
-                Component.text("• There is a chance to completely block the damage from an attack"),
-                Component.text("• There is a chance to reduce the effects of spells")
+        List<Component> loreObsidianSkin = buildLore(
+                "• There is a chance to completely block the damage ",
+                "from an attack",
+                "• There is a chance to reduce the effects of spells"
         );
 
         ingredients.put('O', createCustomHead(textureObsidian, Skills.OBSIDIAN_SKIN, loreObsidianSkin));
