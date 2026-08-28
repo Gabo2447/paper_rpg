@@ -48,7 +48,8 @@ public class RPGPlugin extends JavaPlugin {
                 new OnPlayerConfiguration(dataManager),
                 new OnPlayerQuit(dataManager),
                 new OnEntityDamage(dataManager, skillRegistry),
-                new OnEntityDeath(dataManager, this)
+                new OnEntityDeath(dataManager, this),
+                new OnMobSpawn(this)
         ).forEach(listener -> pm.registerEvents(listener, this));
     }
 

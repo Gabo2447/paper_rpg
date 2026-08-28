@@ -2,6 +2,7 @@ package com.zabrek.rpgplugin.infraestructure.minecraft.listeners;
 
 import com.zabrek.rpgplugin.application.ports.out.PlayerRepository;
 
+import com.zabrek.rpgplugin.infraestructure.minecraft.controllers.VisualController;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -30,5 +31,6 @@ public class OnPlayerQuit implements Listener {
         UUID id = event.getPlayer().getUniqueId();
         dataManager.savePlayer(id);
         dataManager.unloadPlayer(id);
+        VisualController.removeBarOnQuit(player);
     }
 }

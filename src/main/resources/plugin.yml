@@ -9,7 +9,9 @@ api-version: '26.2'
 settings:
   attribute:
     maxDamage:
-      max: 2048.0
+      max: 100000.0
+    maxHealth:
+      max: 100000.0
 
 libraries:
   - com.zaxxer:HikariCP:7.1.0

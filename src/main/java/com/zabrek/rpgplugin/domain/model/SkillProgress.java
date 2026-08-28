@@ -12,9 +12,16 @@ public class SkillProgress {
     public int getLevel() { return level; }
     public double getExperience() { return experience; }
 
+    public double getRequiredXP() {
+        int a = 1000;
+        int b = 500;
+        int c = 1000;
+        return (a * (level * level)) + (b * level) + c; // ax^2+bx+c
+    }
+
     public void addExperience(double amount) {
         this.experience += amount;
-        double nextLevelReq = 100 * Math.pow(level, 1.5);
+        double nextLevelReq = getRequiredXP();
 
         while (this.experience >= nextLevelReq) {
             this.experience -= nextLevelReq;

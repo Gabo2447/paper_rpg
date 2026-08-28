@@ -42,7 +42,7 @@ public class SeismicImpactSkill implements SkillBehavior {
 
             VisualEffectUtil.spawnParticleCircle(particleLocation, radiusEffect, 25, Sound.BLOCK_ANVIL_PLACE, Particle.CLOUD);
 
-            for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
+            for (Entity entity : player.getNearbyEntities(radiusEffect, radiusEffect, radiusEffect)) {
                 if (entity instanceof LivingEntity victim && !entity.equals(player)) {
                     victim.damage(damage, player);
                     Vector pushDirection = victim.getLocation().toVector()
