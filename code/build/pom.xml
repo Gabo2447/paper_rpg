@@ -30,7 +30,6 @@
 
         <!-- module versions -->
         <soulbound-core.version>2.0.0${changelist}</soulbound-core.version>
-        <soulbound-api.version>2.0.0${changelist}</soulbound-api.version>
         <!-- dependency versions -->
         <paper-api.version>1.21.1-R0.1-SNAPSHOT</paper-api.version>
     </properties>
@@ -40,11 +39,6 @@
             <groupId>io.zabrek.soulbound</groupId>
             <artifactId>core</artifactId>
             <version>${soulbound-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.zabrek.soulbound</groupId>
-            <artifactId>api</artifactId>
-            <version>${soulbound-api.version}</version>
         </dependency>
 
         <!-- PaperMC Repository -->
