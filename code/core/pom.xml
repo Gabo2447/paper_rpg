@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.zabrek</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.5</version>
+    </parent>
+
+    <name>SoulBound Core</name>
+    <groupId>io.zabrek.soulbound</groupId>
+    <artifactId>core</artifactId>
+    <version>${revision}${changelist}</version>
+    <description>Provides the Core of SoulBound</description>
+
+    <properties>
+        <revision>2.0.0</revision>
+        <changelist>-SNAPSHOT</changelist>
+
+        <paper-api.version>1.21.1-R0.1-SNAPSHOT</paper-api.version>
+        <log4j-api.version>2.25.5</log4j-api.version>
+        <log4j-core.version>2.25.5</log4j-core.version>
+        <hikaricp.version>7.1.0</hikaricp.version>
+        <faststats-bukkit.version>0.27.1</faststats-bukkit.version>
+
+        <souldbound-lib.version>${revision}${changelist}</souldbound-lib.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.zabrek.soulbound</groupId>
+            <artifactId>lib</artifactId>
+            <version>${souldbound-lib.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- PaperMC Repository -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper-api.version}</version>
+            <scope>provided</scope>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- FastStats pilot dependency -->
+        <dependency>
+            <groupId>dev.faststats.metrics</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>${faststats-bukkit.version}</version>
+        </dependency>
+
+        <!-- LOG4J -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikaricp.version}</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>souldbound-papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Gabo2447/default_config_maven</url>
+        </repository>
+        <repository>
+            <id>faststats-releases</id>
+            <name>betonquest-fast-stats</name>
+            <url>https://repo.faststats.dev/releases</url>
+        </repository>
+    </repositories>
+</project>

@@ -1,0 +1,26 @@
+name: ${plugin.name}
+main: ${plugin.main}
+version: ${plugin.version}
+api-version: ${plugin.api-version}
+description: ${plugin.description}
+authors: [ Zabrek2447 ]
+
+commands:
+  skills:
+    description: Open the skill selection menu.
+    usage: /<command>
+    permission: soulbound.skills
+    aliases: [ sbs, skills ]
+  use:
+    description: It propels you through the air.
+    usage: /<command>
+    permission: soulbound.use
+    aliases: [ sbu, use ]
+
+permissions:
+  soulbound.admin:
+    default: op
+  soulbound.use:
+    default: true
+  soulbound.skills:
+    default: true

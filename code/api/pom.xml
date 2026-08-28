@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.zabrek</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.5</version>
+    </parent>
+
+    <name>SoulBound Api</name>
+    <groupId>io.zabrek.soulbound</groupId>
+    <artifactId>api</artifactId>
+    <version>${revision}${changelist}</version>
+    <description>Provides the API of SoulBound</description>
+
+    <properties>
+        <revision>2.0.0</revision>
+        <changelist>-SNAPSHOT</changelist>
+
+        <paper-api.version>1.21.1-R0.1-SNAPSHOT</paper-api.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${paper-api.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>souldbound-papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Gabo2447/default_config_maven</url>
+        </repository>
+    </repositories>
+</project>
