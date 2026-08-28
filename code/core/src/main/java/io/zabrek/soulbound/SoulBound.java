@@ -3,6 +3,7 @@ package io.zabrek.soulbound;
 import io.zabrek.soulbound.api.kernel.CoreComponentLoader;
 import io.zabrek.soulbound.api.logger.SoulBoundLogger;
 import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
+import io.zabrek.soulbound.faststats.FastStatsMetrics;
 import io.zabrek.soulbound.kernel.SoulBoundComponents;
 import io.zabrek.soulbound.kernel.TopologicalCoreComponentLoader;
 import io.zabrek.soulbound.lib.logger.CachingSoulBoundLoggerFactory;
@@ -70,7 +71,7 @@ public class SoulBound extends JavaPlugin {
         final SoulBoundLoggerFactory loggerFactory = new CachingSoulBoundLoggerFactory(new DefaultSoulBoundLoggerFactory());
         this.log = loggerFactory.create(this);
 
-        this.loader = new TopologicalCoreComponentLoader();
+        this.loader = new TopologicalCoreComponentLoader(loggerFactory.create(CoreComponentLoader.class));
         this.loader.init(SoulBoundLoggerFactory.class, loggerFactory);
         initPluginDependencies(loader);
         SoulBoundComponents.createDefaults(this).forEach(loader::register);
@@ -78,6 +79,9 @@ public class SoulBound extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        loader.getOptional(FastStatsMetrics.class).ifPresent(FastStatsMetrics::disable);
+
         log.info("SoulBound has been disabled.");
     }
 

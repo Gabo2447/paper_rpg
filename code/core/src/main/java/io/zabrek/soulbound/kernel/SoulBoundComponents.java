@@ -1,6 +1,7 @@
 package io.zabrek.soulbound.kernel;
 
 import io.zabrek.soulbound.api.kernel.CoreComponent;
+import io.zabrek.soulbound.kernel.components.ConfigAccessorFactoryComponent;
 import io.zabrek.soulbound.kernel.components.FastStatsMetricsComponent;
 import io.zabrek.soulbound.kernel.components.ProfileProviderComponent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +38,7 @@ public final class SoulBoundComponents {
 
     private static Set<CoreComponent> createEssentials() {
         return Set.of(
+                new ConfigAccessorFactoryComponent(),
                 new ProfileProviderComponent()
         );
     }

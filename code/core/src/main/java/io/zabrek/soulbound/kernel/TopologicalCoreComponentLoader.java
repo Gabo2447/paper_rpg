@@ -2,6 +2,7 @@ package io.zabrek.soulbound.kernel;
 
 import io.zabrek.soulbound.api.kernel.CoreComponent;
 import io.zabrek.soulbound.api.kernel.CoreComponentLoader;
+import io.zabrek.soulbound.api.logger.SoulBoundLogger;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -34,9 +35,17 @@ public class TopologicalCoreComponentLoader implements CoreComponentLoader {
     private final DependencyProvider provider = new DependencyProvider();
 
     /**
-     * Instances a new TopologicalCoreComponentLoader.
+     * The custom logger instance.
      */
-    public TopologicalCoreComponentLoader() {
+    private final SoulBoundLogger logger;
+
+    /**
+     * Instances a new TopologicalCoreComponentLoader.
+     *
+     * @param logger the logger
+     */
+    public TopologicalCoreComponentLoader(final SoulBoundLogger logger) {
+        this.logger = logger;
     }
 
     @Override
@@ -163,6 +172,7 @@ public class TopologicalCoreComponentLoader implements CoreComponentLoader {
     }
 
     private void executeComponentLoading(final List<CoreComponent> sortedOrder) {
+        logger.info("Loading %s SoulBound components...".formatted(sortedOrder.size()));
         for (final CoreComponent comp : sortedOrder) {
             comp.load(provider);
         }
