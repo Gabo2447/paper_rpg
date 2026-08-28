@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - ${maven.build.timestamp}
 
 ### Added
+- new `kernel system` featuring topological component loading and dependency injection for core modules
 ### Changed
 ### Fixed
 ### Deprecated
