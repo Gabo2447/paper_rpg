@@ -1,0 +1,85 @@
+package io.zabrek.soulbound.api.common.function;
+
+import io.zabrek.soulbound.api.SoulBoundException;
+
+import java.util.Objects;
+
+/**
+ * A {@link java.util.function.BiPredicate} that may throw a {@link SoulBoundException}.
+ *
+ * @param <T> the type of the first input to the method
+ * @param <U> the type of the second input to the method
+ * @since 2.0.0
+ */
+@FunctionalInterface
+public interface SoulBoundBiPredicate<T, U> {
+
+    /**
+     * Evaluates this predicate on the given arguments.
+     *
+     * @param first  the first input argument
+     * @param second the second input argument
+     * @return {@code true} if the input arguments match the predicate,
+     * otherwise {@code false}
+     * @throws SoulBoundException when the method execution fails
+     * @since 2.0.0
+     */
+    boolean test(T first, U second) throws SoulBoundException;
+
+    /**
+     * Returns a composed predicate that represents a short-circuiting logical
+     * AND of this predicate and another.  When evaluating the composed
+     * predicate, if this predicate is {@code false}, then the {@code other}
+     * predicate is not evaluated.
+     *
+     * <p>Any exceptions thrown during evaluation of either predicate are relayed
+     * to the caller; if evaluation of this predicate throws an exception, the
+     * {@code other} predicate will not be evaluated.
+     *
+     * @param other a predicate that will be logically-ANDed with this
+     *              predicate
+     * @return a composed predicate that represents the short-circuiting logical
+     * AND of this predicate and the {@code other} predicate
+     * @throws NullPointerException if other is null
+     * @since 2.0.0
+     */
+    default SoulBoundBiPredicate<T, U> and(final SoulBoundBiPredicate<? super T, ? super U> other) {
+        Objects.requireNonNull(other);
+        return (T t, U u) -> test(t, u) && other.test(t, u);
+    }
+
+    /**
+     * Returns a predicate that represents the logical negation of this
+     * predicate.
+     *
+     * @return a predicate that represents the logical negation of this
+     * predicate
+     * @since 2.0.0
+     */
+    default SoulBoundBiPredicate<T, U> negate() {
+        return (T t, U u) -> !test(t, u);
+    }
+
+    /**
+     * Returns a composed predicate that represents a short-circuiting logical
+     * OR of this predicate and another.  When evaluating the composed
+     * predicate, if this predicate is {@code true}, then the {@code other}
+     * predicate is not evaluated.
+     *
+     * <p>Any exceptions thrown during evaluation of either predicate are relayed
+     * to the caller; if evaluation of this predicate throws an exception, the
+     * {@code other} predicate will not be evaluated.
+     *
+     * @param other a predicate that will be logically-ORed with this
+     *              predicate
+     * @return a composed predicate that represents the short-circuiting logical
+     * OR of this predicate and the {@code other} predicate
+     * @throws NullPointerException if other is null
+     * @since 2.0.0
+     */
+    @SuppressWarnings("PMD.ShortMethodName")
+    default SoulBoundBiPredicate<T, U> or(final SoulBoundBiPredicate<? super T, ? super U> other) {
+        Objects.requireNonNull(other);
+        return (T t, U u) -> test(t, u) || other.test(t, u);
+    }
+}

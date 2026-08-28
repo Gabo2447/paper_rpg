@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - new `kernel system` featuring topological component loading and dependency injection for core modules
+- new custom functional interfaces
 ### Changed
 ### Fixed
 ### Deprecated
