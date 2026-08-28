@@ -1,6 +1,8 @@
 package io.zabrek.soulbound.kernel;
 
 import io.zabrek.soulbound.api.kernel.CoreComponent;
+import io.zabrek.soulbound.kernel.components.FastStatsMetricsComponent;
+import io.zabrek.soulbound.kernel.components.ProfileProviderComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
@@ -28,12 +30,21 @@ public final class SoulBoundComponents {
     public static Set<CoreComponent> createDefaults(final JavaPlugin plugin) {
         return Stream.of(
                 createEssentials(),
-                createFeatures()
+                createFeatures(),
+                createAdditionalFeatures()
         ).flatMap(Set::stream).collect(Collectors.toSet());
     }
 
     private static Set<CoreComponent> createEssentials() {
-        return Set.of();
+        return Set.of(
+                new ProfileProviderComponent()
+        );
+    }
+
+    private static Set<CoreComponent> createAdditionalFeatures() {
+        return Set.of(
+                new FastStatsMetricsComponent()
+        );
     }
 
     private static Set<CoreComponent> createFeatures() {

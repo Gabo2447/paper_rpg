@@ -42,7 +42,7 @@ public class DependencyProvider {
      * @param clazz the class type of the dependency to retrieve
      * @param <T>   the generic type of the dependency
      * @return the registered dependency instance
-     * @throws IllegalStateException if the dependency is not found in the registry
+     * @throws NoSuchElementException if the dependency is not found in the registry
      * @since 2.0.0
      */
     @SuppressWarnings("unchecked")

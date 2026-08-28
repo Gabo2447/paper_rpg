@@ -115,6 +115,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>io.zabrek.soulbound</include>
+                                    <include>dev.faststats.metrics</include>
                                     <include>com.zaxxer:HikariCP</include>
                                 </includes>
                             </artifactSet>
