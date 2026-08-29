@@ -12,7 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new custom functional interfaces
 - new custom `logging system` with factory support, topic logging, and exception handling
 - new `configuration` access system
+- new `faststats` component for core performance metrics and monitoring
+- new semantic `version` parsing, tokens, and comparison utilities
 ### Changed
+- updated build configuration
 ### Fixed
 - error handling and dependency resolution in the topological component loader to support polymorphic types
 ### Deprecated

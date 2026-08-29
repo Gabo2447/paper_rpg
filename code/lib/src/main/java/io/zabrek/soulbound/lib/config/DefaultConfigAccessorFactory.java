@@ -3,6 +3,11 @@ package io.zabrek.soulbound.lib.config;
 import io.zabrek.soulbound.api.config.ConfigAccessor;
 import io.zabrek.soulbound.api.config.ConfigAccessorFactory;
 import io.zabrek.soulbound.api.config.FileConfigAccessor;
+import io.zabrek.soulbound.api.config.patcher.PatchTransformerRegistry;
+import io.zabrek.soulbound.api.logger.SoulBoundLogger;
+import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
+import io.zabrek.soulbound.lib.config.patcher.DefaultPatchTransformerRegistry;
+import io.zabrek.soulbound.lib.config.patcher.Patcher;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -16,9 +21,47 @@ import java.io.FileNotFoundException;
 public class DefaultConfigAccessorFactory implements ConfigAccessorFactory {
 
     /**
-     * Creates a new DefaultConfigAccessorFactory instance.
+     * The {@link SoulBoundLoggerFactory} to use for creating {@link SoulBoundLogger} instances.
      */
-    public DefaultConfigAccessorFactory() {
+    private final SoulBoundLoggerFactory loggerFactory;
+
+    /**
+     * Custom {@link SoulBoundLogger} instance for this class.
+     */
+    private final SoulBoundLogger log;
+
+    /**
+     * The default patch transformer registry.
+     */
+    private final PatchTransformerRegistry defaultPatchTransformerRegistry;
+
+    /**
+     * Creates a new DefaultConfigAccessorFactory instance.
+     *
+     * @param loggerFactory logger factory to use
+     * @param log           the logger that will be used for logging
+     */
+    public DefaultConfigAccessorFactory(final SoulBoundLoggerFactory loggerFactory, final SoulBoundLogger log) {
+        this(loggerFactory, log, new DefaultPatchTransformerRegistry());
+    }
+
+    /**
+     * Creates a new DefaultConfigAccessorFactory instance.
+     *
+     * @param loggerFactory            logger factory to use
+     * @param log                      the logger that will be used for logging
+     * @param patchTransformerRegistry the patch transformer registry to use
+     */
+    public DefaultConfigAccessorFactory(final SoulBoundLoggerFactory loggerFactory, final SoulBoundLogger log,
+                                        final PatchTransformerRegistry patchTransformerRegistry) {
+        this.loggerFactory = loggerFactory;
+        this.log = log;
+        this.defaultPatchTransformerRegistry = patchTransformerRegistry;
+    }
+
+    @Override
+    public ConfigAccessor create(final Plugin plugin, final String resourceFile) throws InvalidConfigurationException, FileNotFoundException {
+        return create(null, plugin, resourceFile);
     }
 
     @Override
@@ -29,5 +72,48 @@ public class DefaultConfigAccessorFactory implements ConfigAccessorFactory {
     @Override
     public FileConfigAccessor create(@Nullable final File configurationFile, @Nullable final Plugin plugin, @Nullable final String resourceFile) throws InvalidConfigurationException, FileNotFoundException {
         return new StandardConfigAccessor(configurationFile, plugin, resourceFile);
+    }
+
+    @Override
+    public FileConfigAccessor createPatching(final File configurationFile, final Plugin plugin, final String resourceFile, @Nullable final PatchTransformerRegistry patchTransformerRegisterer) throws InvalidConfigurationException, FileNotFoundException {
+        final ConfigAccessor resourceAccessor = create(plugin, resourceFile);
+        final Patcher patcher = createPatcher(resourceAccessor, patchTransformerRegisterer, createPatchAccessor(plugin, resourceFile));
+        return new StandardPatchingConfigAccessor(configurationFile, plugin, resourceFile, patcher);
+    }
+
+    @Nullable
+    private Patcher createPatcher(final ConfigAccessor resourceAccessor, @Nullable final PatchTransformerRegistry patchTransformerRegistry,
+                                  @Nullable final ConfigAccessor patchAccessor) {
+        if (patchAccessor == null) {
+            return null;
+        }
+        final SoulBoundLogger patcherLogger = loggerFactory.create(Patcher.class, "Config Patcher");
+        try {
+            return new Patcher(patcherLogger, resourceAccessor,
+                    patchTransformerRegistry == null ? defaultPatchTransformerRegistry : patchTransformerRegistry,
+                    patchAccessor.getConfig());
+        } catch (final InvalidConfigurationException e) {
+            this.log.error("Invalid patch file! " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Nullable
+    private ConfigAccessor createPatchAccessor(final Plugin plugin, final String resourceFile) throws InvalidConfigurationException {
+        int index = resourceFile.lastIndexOf('.');
+        final int separatorIndex = resourceFile.lastIndexOf(File.pathSeparator);
+        if (index < separatorIndex) {
+            index = -1;
+        }
+        if (index == -1) {
+            index = resourceFile.length();
+        }
+        final String resourceFilePatch = resourceFile.substring(0, index) + ".patch" + resourceFile.substring(index);
+        try {
+            return create(null, plugin, resourceFilePatch);
+        } catch (final FileNotFoundException e) {
+            log.debug(e.getMessage(), e);
+        }
+        return null;
     }
 }
