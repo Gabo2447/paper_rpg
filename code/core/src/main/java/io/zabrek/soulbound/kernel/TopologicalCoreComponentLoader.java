@@ -3,6 +3,7 @@ package io.zabrek.soulbound.kernel;
 import io.zabrek.soulbound.api.kernel.CoreComponent;
 import io.zabrek.soulbound.api.kernel.CoreComponentLoader;
 import io.zabrek.soulbound.api.logger.SoulBoundLogger;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -120,9 +121,9 @@ public class TopologicalCoreComponentLoader implements CoreComponentLoader {
                     continue;
                 }
 
-                final CoreComponent dependencyComp = producerMap.get(req);
+                final CoreComponent dependencyComp = findProducerFor(req, producerMap);
                 if (dependencyComp == null) {
-                    throw new IllegalStateException("Dependency provider " + req + " not found, but no registered component provides it.");
+                    throw new NoSuchElementException("Dependency provider " + req + " not found, but no registered component provides it.");
                 }
 
                 graph.get(dependencyComp).add(comp);
@@ -135,7 +136,7 @@ public class TopologicalCoreComponentLoader implements CoreComponentLoader {
         try {
             provider.get(req);
             return true;
-        } catch (final IllegalStateException ignored) {
+        } catch (final NoSuchElementException ignored) {
             return false;
         }
     }
@@ -176,5 +177,20 @@ public class TopologicalCoreComponentLoader implements CoreComponentLoader {
         for (final CoreComponent comp : sortedOrder) {
             comp.load(provider);
         }
+    }
+
+    @Nullable
+    private CoreComponent findProducerFor(final Class<?> req, final Map<Class<?>, CoreComponent> producerMap) {
+        if (producerMap.containsKey(req)) {
+            return producerMap.get(req);
+        }
+
+        for (final Map.Entry<Class<?>, CoreComponent> entry : producerMap.entrySet()) {
+            if (req.isAssignableFrom(entry.getKey()) || entry.getKey().isAssignableFrom(req)) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
     }
 }

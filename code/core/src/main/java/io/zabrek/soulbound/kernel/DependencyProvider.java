@@ -47,11 +47,19 @@ public class DependencyProvider {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(final Class<T> clazz) {
-        final T instance = (T) registry.get(clazz);
-        if (instance == null) {
-            throw new NoSuchElementException("Dependency not found. " + clazz.getName() + "!");
+        // Validates if it is the object
+        final Object exactInstance = registry.get(clazz);
+        if (exactInstance != null) {
+            return (T) exactInstance;
         }
-        return instance;
+
+        for (final Map.Entry<Class<?>, Object> entry : registry.entrySet()) {
+            if (clazz.isAssignableFrom(entry.getKey())) {
+                return (T) entry.getValue();
+            }
+        }
+
+        throw new NoSuchElementException("Dependency not found. " + clazz.getName() + "!");
     }
 
     /**

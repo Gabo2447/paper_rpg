@@ -70,7 +70,8 @@ public interface CoreComponentLoader {
      * For each component, it verifies that all required dependencies are present
      * in the provider before invoking its loading logic.
      *
-     * @throws IllegalStateException if a component requires a dependency that has not been provided
+     * @throws NoSuchElementException if a component requires a dependency that has not been provided
+     * @throws IllegalStateException  if there are circular dependencies
      * @since 2.0.0
      */
     void load();

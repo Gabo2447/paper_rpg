@@ -14,8 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new `configuration` access system
 ### Changed
 ### Fixed
+- error handling and dependency resolution in the topological component loader to support polymorphic types
 ### Deprecated
 ### Removed
+- `SimpleCoreComponentLoader` loader
 ### Security
 
 ## [1.2.0] - 2026-07-16
