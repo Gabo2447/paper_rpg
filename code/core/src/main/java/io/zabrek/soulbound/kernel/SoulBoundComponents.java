@@ -1,9 +1,13 @@
 package io.zabrek.soulbound.kernel;
 
 import io.zabrek.soulbound.api.kernel.CoreComponent;
+import io.zabrek.soulbound.kernel.components.AsyncSaverComponent;
 import io.zabrek.soulbound.kernel.components.ConfigAccessorFactoryComponent;
+import io.zabrek.soulbound.kernel.components.ConfigComponent;
+import io.zabrek.soulbound.kernel.components.DatabaseComponent;
 import io.zabrek.soulbound.kernel.components.FastStatsMetricsComponent;
 import io.zabrek.soulbound.kernel.components.ProfileProviderComponent;
+import io.zabrek.soulbound.kernel.components.ReloaderComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
@@ -39,13 +43,17 @@ public final class SoulBoundComponents {
     private static Set<CoreComponent> createEssentials() {
         return Set.of(
                 new ConfigAccessorFactoryComponent(),
-                new ProfileProviderComponent()
+                new ProfileProviderComponent(),
+                new ConfigComponent(),
+                new AsyncSaverComponent(),
+                new DatabaseComponent()
         );
     }
 
     private static Set<CoreComponent> createAdditionalFeatures() {
         return Set.of(
-                new FastStatsMetricsComponent()
+                new FastStatsMetricsComponent(),
+                new ReloaderComponent()
         );
     }
 

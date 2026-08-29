@@ -2,7 +2,7 @@ package io.zabrek.soulbound.kernel.components;
 
 import io.zabrek.soulbound.api.config.ConfigAccessorFactory;
 import io.zabrek.soulbound.api.kernel.CoreComponent;
-// import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
+import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
 import io.zabrek.soulbound.kernel.DependencyProvider;
 import io.zabrek.soulbound.lib.config.DefaultConfigAccessorFactory;
 
@@ -21,17 +21,18 @@ public class ConfigAccessorFactoryComponent implements CoreComponent {
 
     @Override
     public Set<Class<?>> requires() {
-        return Set.of(/*SoulBoundLoggerFactory.class*/);
+        return Set.of(SoulBoundLoggerFactory.class);
     }
 
     @Override
     public Set<Class<?>> provides() {
-        return Set.of(DefaultConfigAccessorFactory.class);
+        return Set.of(ConfigAccessorFactory.class);
     }
 
     @Override
     public void load(final DependencyProvider provider) {
-        final DefaultConfigAccessorFactory configAccessorFactory = new DefaultConfigAccessorFactory();
-        provider.take(DefaultConfigAccessorFactory.class, configAccessorFactory);
+        final SoulBoundLoggerFactory loggerFactory = provider.get(SoulBoundLoggerFactory.class);
+        final ConfigAccessorFactory configAccessorFactory = new DefaultConfigAccessorFactory(loggerFactory, loggerFactory.create(ConfigAccessorFactory.class));
+        provider.take(ConfigAccessorFactory.class, configAccessorFactory);
     }
 }

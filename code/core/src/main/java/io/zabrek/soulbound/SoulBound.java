@@ -1,11 +1,17 @@
 package io.zabrek.soulbound;
 
+import io.zabrek.soulbound.api.config.ConfigAccessor;
+import io.zabrek.soulbound.api.config.FileConfigAccessor;
 import io.zabrek.soulbound.api.kernel.CoreComponentLoader;
 import io.zabrek.soulbound.api.logger.SoulBoundLogger;
 import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
+import io.zabrek.soulbound.api.profile.ProfileProvider;
+import io.zabrek.soulbound.database.Connector;
+import io.zabrek.soulbound.database.Saver;
 import io.zabrek.soulbound.faststats.FastStatsMetrics;
 import io.zabrek.soulbound.kernel.SoulBoundComponents;
 import io.zabrek.soulbound.kernel.TopologicalCoreComponentLoader;
+import io.zabrek.soulbound.kernel.components.DatabaseComponent;
 import io.zabrek.soulbound.lib.logger.CachingSoulBoundLoggerFactory;
 import io.zabrek.soulbound.logger.DefaultSoulBoundLoggerFactory;
 import org.bukkit.Server;
@@ -54,6 +60,7 @@ public class SoulBound extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
 
         try {
             loader.load();
@@ -80,6 +87,12 @@ public class SoulBound extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        loader.getOptional(ProfileProvider.class).map(ProfileProvider::getOnlineProfiles)
+                .ifPresent(onlineProfiles -> onlineProfiles.forEach(onlineProfile -> onlineProfile.getPlayer().closeInventory()));
+
+        loader.getOptional(Saver.class).ifPresent(Saver::end);
+        loader.getOptional(Connector.class).ifPresent(connector -> connector.getDatabase().closeConnection());
+
         loader.getOptional(FastStatsMetrics.class).ifPresent(FastStatsMetrics::disable);
 
         log.info("SoulBound has been disabled.");
@@ -101,5 +114,32 @@ public class SoulBound extends JavaPlugin {
      */
     public CoreComponentLoader getLoader() {
         return loader;
+    }
+
+    /**
+     * Get the plugin configuration file.
+     *
+     * @return config file
+     */
+    public ConfigAccessor getPluginConfig() {
+        return loader.get(FileConfigAccessor.class);
+    }
+
+    /**
+     * Checks if MySQL is used or not.
+     *
+     * @return if MySQL is used (false means that SQLite is being used)
+     */
+    public boolean isMySQLUsed() {
+        return loader.get(DatabaseComponent.class).usesMySQL();
+    }
+
+    /**
+     * Returns the {@link Saver} instance used by BetonQuest.
+     *
+     * @return the database saver
+     */
+    public Saver getSaver() {
+        return loader.get(Saver.class);
     }
 }
