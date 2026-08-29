@@ -1,0 +1,13 @@
+database:
+  prefix: sb_
+  reconnect_interval: 5000
+  type: sqlite
+  hikari_pooling: true
+  mysql:
+    host:
+    port:
+    base:
+    pass:
+    user:
+profile:
+  initial_name: default
