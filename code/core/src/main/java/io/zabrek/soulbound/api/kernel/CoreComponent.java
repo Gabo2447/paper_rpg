@@ -1,13 +1,12 @@
 package io.zabrek.soulbound.api.kernel;
 
 import io.zabrek.soulbound.kernel.DependencyProvider;
-import io.zabrek.soulbound.kernel.SimpleCoreComponentLoader;
 
 import java.util.Set;
 
 /**
  * A core component of the CoreMetrics plugin representing a unique unit of functionality that may be loaded
- * by a {@link SimpleCoreComponentLoader} respecting its dependencies and thereby being loaded in order.
+ * by a {@link CoreComponentLoader} respecting its dependencies and thereby being loaded in order.
  * <br><br>
  * Every {@link CoreComponent} defines a list of required dependencies in {@link #requires()} that must be available
  * via {@link DependencyProvider} before the component can be loaded, as well as a list of provided dependencies
