@@ -1,0 +1,15 @@
+version: "1.0"
+linter: jetbrains/qodana-jvm-community:2026.1
+
+exclude:
+  - name: All
+    paths:
+      - .mvn/repository
+
+include:
+  - name: Deprecation
+  - name: DeprecatedIsStillUsed
+  - name: DanglingJavadoc
+  - name: JavadocLinkAsPlainText
+  - name: MissingJavadoc
+  - name: NullableProblems
