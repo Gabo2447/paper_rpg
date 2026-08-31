@@ -6,6 +6,7 @@ import io.zabrek.soulbound.kernel.components.ConfigAccessorFactoryComponent;
 import io.zabrek.soulbound.kernel.components.ConfigComponent;
 import io.zabrek.soulbound.kernel.components.DatabaseComponent;
 import io.zabrek.soulbound.kernel.components.FastStatsMetricsComponent;
+import io.zabrek.soulbound.kernel.components.IdentifiersComponent;
 import io.zabrek.soulbound.kernel.components.LogHandlerComponent;
 import io.zabrek.soulbound.kernel.components.MigratorComponent;
 import io.zabrek.soulbound.kernel.components.ProfileProviderComponent;
@@ -48,7 +49,8 @@ public final class SoulBoundComponents {
                 new ProfileProviderComponent(),
                 new ConfigComponent(),
                 new AsyncSaverComponent(),
-                new DatabaseComponent()
+                new DatabaseComponent(),
+                new IdentifiersComponent()
         );
     }
 
