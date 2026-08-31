@@ -1,7 +1,5 @@
 package io.zabrek.soulbound.logger.filter;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
@@ -26,7 +24,7 @@ public class LogRecordTypeFilter implements Filter {
     }
 
     @Override
-    public boolean isLoggable( final LogRecord record) {
+    public boolean isLoggable(final LogRecord record) {
         return requiredRecordType.isInstance(record);
     }
 }

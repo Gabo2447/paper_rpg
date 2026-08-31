@@ -32,7 +32,6 @@ import java.util.logging.Handler;
 /**
  * A static helper class to create {@link Handler}s in the way they are usually used by SoulBound.
  */
-@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class HandlerFactory {
 
     private HandlerFactory() {
