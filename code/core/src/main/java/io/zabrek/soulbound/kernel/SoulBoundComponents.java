@@ -7,6 +7,7 @@ import io.zabrek.soulbound.kernel.components.ConfigComponent;
 import io.zabrek.soulbound.kernel.components.DatabaseComponent;
 import io.zabrek.soulbound.kernel.components.FastStatsMetricsComponent;
 import io.zabrek.soulbound.kernel.components.LogHandlerComponent;
+import io.zabrek.soulbound.kernel.components.MigratorComponent;
 import io.zabrek.soulbound.kernel.components.ProfileProviderComponent;
 import io.zabrek.soulbound.kernel.components.ReloaderComponent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,7 +56,8 @@ public final class SoulBoundComponents {
         return Set.of(
                 new FastStatsMetricsComponent(),
                 new ReloaderComponent(),
-                new LogHandlerComponent()
+                new LogHandlerComponent(),
+                new MigratorComponent()
         );
     }
 

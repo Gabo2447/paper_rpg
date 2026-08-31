@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new `configuration` access system
 - new `faststats` component for core performance metrics and monitoring
 - new semantic `version` parsing, tokens, and comparison utilities
+- new `migrator` system
 ### Changed
 - updated build configuration
 ### Fixed
