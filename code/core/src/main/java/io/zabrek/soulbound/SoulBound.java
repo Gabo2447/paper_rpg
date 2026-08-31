@@ -11,7 +11,6 @@ import io.zabrek.soulbound.database.Saver;
 import io.zabrek.soulbound.faststats.FastStatsMetrics;
 import io.zabrek.soulbound.kernel.SoulBoundComponents;
 import io.zabrek.soulbound.kernel.TopologicalCoreComponentLoader;
-import io.zabrek.soulbound.kernel.components.DatabaseComponent;
 import io.zabrek.soulbound.lib.logger.CachingSoulBoundLoggerFactory;
 import io.zabrek.soulbound.logger.DefaultSoulBoundLoggerFactory;
 import org.bukkit.Server;
@@ -123,15 +122,6 @@ public class SoulBound extends JavaPlugin {
      */
     public ConfigAccessor getPluginConfig() {
         return loader.get(FileConfigAccessor.class);
-    }
-
-    /**
-     * Checks if MySQL is used or not.
-     *
-     * @return if MySQL is used (false means that SQLite is being used)
-     */
-    public boolean isMySQLUsed() {
-        return loader.get(DatabaseComponent.class).usesMySQL();
     }
 
     /**

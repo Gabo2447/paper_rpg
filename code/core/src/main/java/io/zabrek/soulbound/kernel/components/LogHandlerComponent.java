@@ -53,6 +53,7 @@ public class LogHandlerComponent implements CoreComponent {
         provider.take(HistoryHandler.class, debugHistoryHandler);
     }
 
+    @SuppressWarnings("PMD.DoNotUseThreads")
     private void registerLogHandler(final Server server, final Handler handler) {
         final Logger serverLogger = server.getLogger().getParent();
         serverLogger.addHandler(handler);
