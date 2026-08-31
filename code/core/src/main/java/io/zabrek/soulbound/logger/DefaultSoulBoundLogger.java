@@ -90,11 +90,8 @@ public class DefaultSoulBoundLogger implements SoulBoundLogger {
     @Override
     public void warn(final LogSource logSource, @Nullable final String msg, final Throwable thrown) {
         final SoulBoundLogRecord record = new SoulBoundLogRecord(Level.WARNING, msg, plugin, logSource);
+        record.setThrown(thrown);
         logger.log(record);
-
-        final SoulBoundLogRecord recordThrowable = new SoulBoundLogRecord(Level.FINE, "Additional stacktrace:", plugin, logSource);
-        recordThrowable.setThrown(thrown);
-        logger.log(recordThrowable);
     }
 
     @Override

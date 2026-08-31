@@ -1,3 +1,5 @@
+debug:
+  enabled: true
 database:
   prefix: sb_
   reconnect_interval: 5000

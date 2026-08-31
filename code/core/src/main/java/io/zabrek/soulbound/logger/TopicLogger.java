@@ -28,7 +28,7 @@ public class TopicLogger extends Logger {
         super(clazz.getCanonicalName(), null);
         setParent(parentLogger);
         setLevel(Level.ALL);
-        this.topic = topic == null ? "" : "(" + topic + ") ";
+        this.topic = topic == null || topic.isBlank() ? "" : "(" + topic + ") ";
     }
 
     @Override

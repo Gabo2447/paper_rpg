@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
- * Custom {@link LogRecord} for SoulBound that adds a {@link Plugin} name and {@link LogSource} name.
+ * Custom {@link LogRecord} holding contextual metadata.
  */
 public class SoulBoundLogRecord extends LogRecord {
 
