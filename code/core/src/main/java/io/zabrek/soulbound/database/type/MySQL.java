@@ -89,10 +89,15 @@ public class MySQL extends Database {
                     + "language VARCHAR(16) NOT NULL) ENGINE=InnoDB;");
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + prefix + "level ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    + "profileID VARCHAR(256) NOT NULL, "
+                    + "playerID VARCHAR(256) NOT NULL, "
                     + "skill VARCHAR(256) NOT NULL, "
                     + "level INT NOT NULL, "
                     + "experience INT NOT NULL) ENGINE=InnoDB;");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + prefix + "triggers ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    + "playerID VARCHAR(256) NOT NULL, "
+                    + "trigger VARCHAR(512) NOT NULL, "
+                    + "instructions VARCHAR(2048) NOT NULL);");
         }
     }
 
@@ -114,11 +119,19 @@ public class MySQL extends Database {
                     + "ADD FOREIGN KEY (profileID) REFERENCES " + prefix + "profile (profileID) ON DELETE CASCADE;");
 
             stmt.executeUpdate("ALTER TABLE " + prefix + "level "
+                    + "MODIFY COLUMN playerID profileID CHAR(36) NOT NULL, "
                     + "MODIFY COLUMN skill VARCHAR(256) NOT NULL, "
                     + "DROP PRIMARY KEY, "
                     + "DROP COLUMN id, "
                     + "ADD PRIMARY KEY (profileID, skill), "
                     + "ADD FOREIGN KEY (profileID) REFERENCES " + prefix + "profile (profileID) ON DELETE CASCADE;");
+
+            stmt.executeUpdate("ALTER TABLE " + prefix + "triggers "
+                    + "MODIFY COLUMN playerID profileID CHAR(36) NOT NULL, "
+                    + "DROP PRIMARY KEY, "
+                    + "DROP COLUMN id, "
+                    + "ADD PRIMARY KEY (profileID, trigger), "
+                    + "ADD FOREIGN KEY (profileID) REFERENCES " + prefix + "profile (profileID) ON DELETE CASCADE;)");
 
             stmt.executeUpdate("ALTER TABLE " + prefix + "player "
                     + "MODIFY COLUMN playerID CHAR(36) NOT NULL, "

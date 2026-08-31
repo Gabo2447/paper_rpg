@@ -7,6 +7,11 @@ import java.util.function.Function;
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public enum QueryType {
+
+    /**
+     * Get the triggers of a profile. ProfileID.
+     */
+    SELECT_TRIGGERS(prefix -> "SELECT trigger, instructions FROM " + prefix + "triggers WHERE profileID = ?;"),
     /**
      * Get the cooldown of a profile. ProfileID.
      */
@@ -20,6 +25,10 @@ public enum QueryType {
      */
     SELECT_PLAYER(prefix -> "SELECT language FROM " + prefix + "player WHERE playerID = ?;"),
 
+    /**
+     * Get all triggers.
+     */
+    LOAD_ALL_TRIGGERS(prefix -> "SELECT * FROM " + prefix + "triggers;"),
     /**
      * Get all players.
      */

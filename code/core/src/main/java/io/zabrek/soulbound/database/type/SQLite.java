@@ -100,6 +100,11 @@ public class SQLite extends Database {
                     + "skill VARCHAR(256) NOT NULL, "
                     + "level INT NOT NULL, "
                     + "experience INT NOT NULL);");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS " + prefix + "triggers ("
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "playerID VARCHAR(256) NOT NULL, "
+                    + "trigger VARCHAR(512) NOT NULL, "
+                    + "instructions VARCHAR(2048) NOT NULL);");
         }
     }
 
@@ -117,6 +122,16 @@ public class SQLite extends Database {
                     + "profileID CHAR(36) PRIMARY KEY NOT NULL)");
             stmt.executeUpdate("INSERT OR IGNORE INTO " + prefix + "profile "
                     + "(profileID) SELECT playerID FROM " + prefix + "player");
+            stmt.executeUpdate("CREATE TABLE " + prefix + "triggers_tmp ("
+                    + "profileID CHAR(36) NOT NULL, "
+                    + "trigger VARCHAR(512) NOT NULL, "
+                    + "instructions VARCHAR(2048) NOT NULL, "
+                    + "PRIMARY KEY (profileID, trigger), "
+                    + "FOREIGN KEY (profileID) REFERENCES " + prefix + "profile (profileID) ON DELETE CASCADE)");
+            stmt.executeUpdate("INSERT OR IGNORE INTO " + prefix + "triggers_tmp "
+                    + "(profileID, trigger, instructions) " + "SELECT playerID, trigger, instructions FROM " + prefix + "triggers");
+            stmt.executeUpdate("ALTER TABLE " + prefix + "triggers_tmp "
+                    + "RENAME TO " + prefix + "triggers");
             stmt.executeUpdate("CREATE TABLE " + prefix + "cooldown_tmp ("
                     + "profileID CHAR(36) NOT NULL, "
                     + "skill VARCHAR(512) NOT NULL, "

@@ -8,6 +8,10 @@ import java.util.function.Function;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public enum UpdateType {
     /**
+     * Add the single trigger. ProfileID, triggerID, instruction.
+     */
+    ADD_TRIGGERS(prefix -> "INSERT INTO " + prefix + "triggers (profileID, trigger, instructions) VALUES (?, ?, ?);"),
+    /**
      * Add single player profile. PlayerID, profileID, name.
      */
     ADD_PLAYER_PROFILE(prefix -> "INSERT INTO " + prefix + "player_profile (playerID, profileID, name) VALUES (?, ?, ?);"),
@@ -29,6 +33,10 @@ public enum UpdateType {
     ADD_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?, ?);"),
 
     /**
+     * Removes the single trigger. ProfileID, triggerID.
+     */
+    REMOVE_TRIGGERS(prefix -> "DELETE FROM " + prefix + "triggers WHERE profileID = ? AND trigger = ?;"),
+    /**
      * Remove single player profile. ProfileID.
      */
     REMOVE_PLAYER_PROFILE(prefix -> "DELETE FROM " + prefix + "player_profile WHERE profileID = ?;"),
@@ -46,6 +54,10 @@ public enum UpdateType {
     REMOVE_LEVEL(prefix -> "DELETE FROM " + prefix + "level WHERE profileID = ? AND skill = ?;"),
 
     /**
+     * Deletes all triggers for a given profile. ProfileID.
+     */
+    DELETE_TRIGGERS(prefix -> "DELETE FROM " + prefix + "triggers WHERE profileID = ?;"),
+    /**
      * Deletes all cooldown.
      */
     DELETE_COOLDOWN(prefix -> "DELETE FROM " + prefix + "cooldown;"),
@@ -58,6 +70,10 @@ public enum UpdateType {
      */
     DELETE_PLAYER(prefix -> "DELETE FROM " + prefix + "player WHERE playerID = ?;"),
 
+    /**
+     * Updates the profileID of all triggers for a given profile. ProfileID, ProfileID.
+     */
+    UPDATE_PLAYERS_TRIGGERS(prefix -> "UPDATE " + prefix + "triggers SET profileID = ? WHERE profileID = ?;"),
     /**
      * Updates the profileID's name for a given profile. Name, ProfileID.
      */
@@ -75,6 +91,10 @@ public enum UpdateType {
      */
     UPDATE_PLAYER_LANGUAGE(prefix -> "UPDATE " + prefix + "player SET language = ? WHERE playerID = ?;"),
 
+    /**
+     * Drops the triggers table.
+     */
+    DROP_TRIGGERS(prefix -> "DROP TABLE " + prefix + "triggers"),
     /**
      * Drops the player profile table.
      */
@@ -101,6 +121,10 @@ public enum UpdateType {
     DROP_MIGRATION(prefix -> "DROP TABLE " + prefix + "migration"),
 
     /**
+     * Inserts a new trigger. ProfileID, trigger, instructions.
+     */
+    INSERT_TRIGGER(prefix -> "INSERT INTO " + prefix + "triggers (profileID, trigger, instructions) VALUES (?, ?, ?);"),
+    /**
      * Inserts a new player. PlayerID, active_profile, language.
      */
     INSERT_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?,?,?);"),
@@ -120,7 +144,16 @@ public enum UpdateType {
      * Inserts a new level. ProfileID, skill, level, experience.
      */
     INSERT_LEVEL(prefix -> "INSERT INTO " + prefix + "level (profileID, skill, level, experience) VALUES(?, ?, ?, ?);"),
-    ;
+
+    /**
+     * Remove all triggers for a given trigger. Trigger.
+     */
+    REMOVE_ALL_TRIGGERS(prefix -> "DELETE FROM " + prefix + "triggers WHERE trigger = ?;"),
+
+    /**
+     * Renames all triggers for a given trigger. Trigger, Trigger.
+     */
+    RENAME_ALL_TRIGGERS(prefix -> "UPDATE " + prefix + "triggers SET trigger = ? WHERE trigger = ?");
 
     /**
      * Function to create the SQL code from a prefix.

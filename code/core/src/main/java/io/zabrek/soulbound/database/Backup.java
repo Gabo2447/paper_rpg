@@ -238,6 +238,7 @@ public final class Backup {
         con.updateSQL(UpdateType.DROP_PLAYER_PROFILE, args);
         con.updateSQL(UpdateType.DROP_PLAYER, args);
         con.updateSQL(UpdateType.DROP_PROFILE, args);
+        con.updateSQL(UpdateType.DROP_TRIGGERS, args);
 
         loadDatabaseFromBackup0(config);
     }
@@ -288,6 +289,16 @@ public final class Backup {
                         cooldown.getString(key + ".profileID"),
                         cooldown.getString(key + ".skill"),
                         cooldown.getString(key + ".time")));
+            }
+        }
+        final ConfigurationSection triggers = config.getConfigurationSection("triggers");
+        if (triggers != null) {
+            for (final String key : triggers.getKeys(false)) {
+                con.updateSQL(UpdateType.INSERT_TRIGGER, new Arguments(
+                        triggers.getString(key, "profileID"),
+                        triggers.getString(key, "trigger"),
+                        triggers.getString(key, "instructions")
+                ));
             }
         }
         if (!databaseBackupFile.delete()) {
