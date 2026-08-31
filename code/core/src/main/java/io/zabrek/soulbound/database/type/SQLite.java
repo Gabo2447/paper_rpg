@@ -130,6 +130,7 @@ public class SQLite extends Database {
                     + "FOREIGN KEY (profileID) REFERENCES " + prefix + "profile (profileID) ON DELETE CASCADE)");
             stmt.executeUpdate("INSERT OR IGNORE INTO " + prefix + "triggers_tmp "
                     + "(profileID, trigger, instructions) " + "SELECT playerID, trigger, instructions FROM " + prefix + "triggers");
+            stmt.executeUpdate("DROP TABLE " + prefix + "triggers");
             stmt.executeUpdate("ALTER TABLE " + prefix + "triggers_tmp "
                     + "RENAME TO " + prefix + "triggers");
             stmt.executeUpdate("CREATE TABLE " + prefix + "cooldown_tmp ("

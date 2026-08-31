@@ -87,9 +87,10 @@ public class HikariProvider implements ConnectionProvider {
         MYSQL(5, args -> {
             final HikariConfig hikariConfig = new HikariConfig();
             hikariConfig.setPoolName("betonquest-mysql-pool");
-            hikariConfig.setJdbcUrl("jdbc:mysql://%s:%s/%s?&useSSL=false".formatted(args[0], args[1], args[2]));
+            hikariConfig.setJdbcUrl("jdbc:mysql://%s:%s/%s?useSSL=false".formatted(args[0], args[1], args[2]));
             hikariConfig.setUsername(args[3]);
             hikariConfig.setPassword(args[4]);
+            hikariConfig.addDataSourceProperty("allowPublicKeyRetrieval", "true");
             hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
             hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
             hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
