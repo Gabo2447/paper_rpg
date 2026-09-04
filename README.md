@@ -1,33 +1,58 @@
-# RPGPlugin - Minecraft Paper Plugin
-A basic RPG plugin for Paper/Spigot version 26.2 that adds a system of active and passive skills with data persistence in YAML.
+<p align="center">
+  <img alt="image" src="assets/soulbound-banner.svg" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/Gabo2447/SoulBound"><img alt="license" src="https://shieldcn.dev/github/Gabo2447/SoulBound/license.svg" /></a>
+  <a href="https://github.com/Gabo2447/SoulBound/releases"><img alt="release" src="https://shieldcn.dev/github/Gabo2447/SoulBound/release.svg" /></a>
+  <a href="https://github.com/Gabo2447/SoulBound/commits"><img alt="last commit" src="https://shieldcn.dev/github/Gabo2447/SoulBound/last-commit.svg" /></a>
+  <a href="https://github.com/Gabo2447/SoulBound/actions"><img alt="CI" src="https://shieldcn.dev/github/Gabo2447/SoulBound/ci.svg?variant=destructive" /></a>
+</p>
+
+## Overview
+
+A lightweight, scalable, and optimized plugin for Paper/Spigot (Java 21+) that adds advanced RPG mechanics to Minecraft.
+With support for persistent storage in SQLite/MySQL and zero impact on TPS, SoulBound integrates unique combat, mining,
+and survival skills with seamless integration and instant configuration.
+
+- ⚙️ Customizable
+- ⚡ Fast
+
+## Getting Started
+
+Follow these steps to get **SoulBound** up and running on your Minecraft server in less than two minutes.
+
+### Prerequisites
+
+Ensure your server environment meets the following minimum requirements:
+
+* **Server Software:** Paper, Purpur, or Spigot (`1.20.4+` / compatible with modern Paper builds)
+* **Java Version:** Java 21 or higher
+* **Database:** SQLite (default, zero-setup) or MySQL 8.0+
+
+### Installation
+
+1. **Download the Plugin:** Grab the latest `SoulBound-x.x.x.jar` release from
+   the [Releases Tab](https://github.com/Gabo2447/SoulBound/releases).
+2. **Deploy the File:** Place the downloaded `.jar` file into your server's `plugins/` directory.
+3. **Start the Server:** Launch your server to generate the configuration files and default SQLite database.
 
 ## Skills Included
 
-#### 1. Seismic Impact (Area of Effect Combat)
-When performing a critical hit (falling while jumping) or using a specific tool, the player generates a shockwave on the ground.
+* **1. Seismic Impact:** Critical hits generate a shockwave on the ground, knocking back nearby enemies.
+* **2. Streak of Good Luck:** Mining ores triggers a dynamic chance to chain-mine adjacent blocks or double drops.
+* **3. Adrenaline in the Blood:** Falling below 30% HP triggers a frenzy state with bonus speed and damage.
+* **4. Piercing Arrow:** Charged bow shots can pierce through initial targets to hit enemies behind them.
+* **5. Obsidian Skin:** Passive chance to block incoming damage completely or cut negative status effects in half.
 
-#### 2. Streak of Good Luck (Mining & Gathering)
-Breaking an ore triggers a dynamic chance (scaling up with the skill level) to instantly mine adjacent blocks of the same type or duplicate the item drops.
+## Commands & Permissions
 
-#### 3. Adrenaline in the Blood (Survival Passive)
-When the player's health drops below 30%, they enter a frenzy state, gaining increased movement speed and bonus damage for a few seconds.
+| Command                     | Permission        | Description                                        |
+|:----------------------------|:------------------|:---------------------------------------------------|
+| `/skills`                   | `soulbound.user`  | Opens the main skill selection and upgrade menu.   |
+| `/soulbound reload`         | `soulbound.admin` | Reloads the `config.yml` file and skill values.    |
+| `/soulbound reset <player>` | `soulbound.admin` | Resets all skills and stats for a specific player. |
 
-#### 4. Piercing Arrow (Archery Specialist)
-Fully charged bow shots have a chance to pass through the first target hit, maintaining their trajectory to damage monsters lined up behind them.
-
-#### 5. Obsidian Skin (Tank Defensive Passive)
-Grants a passive statistical chance to completely block an incoming attack's damage or slash negative status effects (like fire or poison) in half.
-
-## Technologies
-
-- Java
-- Spigot/Paper API
-- Adventure API
-- SQlite
-
-## Installation
-
-1. Download the RPGPlugin.jar file attached below in the Assets section.
-2. Drag it into the plugins/ folder on your Spigot/Paper (26.2)-compatible server.
-3. Start or restart the server.
-4. Use /skills in-game to select your first skill
+<p align="center">
+  <a href="https://github.com/Gabo2447/SoulBound/graphs/contributors"><img alt="contributors" src="https://shieldcn.dev/contributors/Gabo2447/SoulBound.svg?mode=dark" /></a>
+</p>
