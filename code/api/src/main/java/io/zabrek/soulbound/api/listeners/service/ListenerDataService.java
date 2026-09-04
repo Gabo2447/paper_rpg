@@ -1,0 +1,112 @@
+package io.zabrek.soulbound.api.listeners.service;
+
+import io.zabrek.soulbound.api.data.CooldownRecord;
+import io.zabrek.soulbound.api.data.LevelRecord;
+import io.zabrek.soulbound.api.profile.Profile;
+
+import java.util.List;
+
+/**
+ * Provides data for listener.
+ *
+ * @since 2.0.0
+ */
+public interface ListenerDataService {
+
+    /**
+     * Gets the data for this profile in the cache.
+     *
+     * @param profile the profile to get the data
+     * @return data
+     * @since 2.0.0
+     */
+    ListenerPlayerData get(Profile profile);
+
+    /**
+     * Gets the cooldowns data for this profile in the cache.
+     *
+     * @param profile the profile to get the data
+     * @return data
+     * @since 2.0.0
+     */
+    List<CooldownRecord> getCooldowns(Profile profile);
+
+    /**
+     * Gets the levels data for this profile in the cache.
+     *
+     * @param profile the profile to get the data
+     * @return data
+     * @since 2.0.0
+     */
+    List<LevelRecord> getLevels(Profile profile);
+
+    /**
+     * Updates ALL data.
+     *
+     * @param profile   the profile to update
+     * @param freshData the new data
+     * @since 2.0.0
+     */
+    void update(Profile profile, ListenerPlayerData freshData);
+
+    /**
+     * Updates the level data.
+     *
+     * @param profile   the profile to update
+     * @param freshData the new data
+     */
+    void updateLevel(Profile profile, LevelRecord freshData);
+
+    /**
+     * Updates the cooldown data.
+     *
+     * @param profile   the profile to update
+     * @param freshData the new data
+     * @since 2.0.0
+     */
+    void updateCooldown(Profile profile, CooldownRecord freshData);
+
+    /**
+     * Deletes all data.
+     *
+     * @param profile the profile to remove the data
+     * @since 2.0.0
+     */
+    void remove(Profile profile);
+
+    /**
+     * Deletes a cooldown from the database.
+     *
+     * @param profile    the profile to remove the cooldown
+     * @param removeData the cooldown to remove
+     * @since 2.0.0
+     */
+    void removeCooldown(Profile profile, CooldownRecord removeData);
+
+    /**
+     * Deletes a list of cooldown from the database.
+     *
+     * @param profile    the profile to remove the cooldowns
+     * @param removeData the cooldowns to remove
+     * @since 2.0.0
+     */
+    void removeCooldown(Profile profile, List<CooldownRecord> removeData);
+
+    /**
+     * Deletes a level from the database.
+     *
+     * @param profile    the profile to remove the level
+     * @param removeData the level to remove
+     * @since 2.0.0
+     */
+    void removeLevel(Profile profile, LevelRecord removeData);
+
+    /**
+     * Deletes a list of levels from the database.
+     *
+     * @param profile    the profile to remove the levels
+     * @param removeData the levels to remove
+     * @since 2.0.0
+     */
+    void removeLevel(Profile profile, List<LevelRecord> removeData);
+}

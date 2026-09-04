@@ -5,7 +5,6 @@ import io.zabrek.soulbound.api.profile.ProfileProvider;
 import io.zabrek.soulbound.kernel.DependencyProvider;
 import io.zabrek.soulbound.profile.DefaultProfileProvider;
 import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +35,7 @@ public class ProfileProviderComponent implements CoreComponent {
 
     @Override
     public void load(final DependencyProvider provider) {
-        final Plugin plugin = provider.get(JavaPlugin.class);
+        final JavaPlugin plugin = provider.get(JavaPlugin.class);
         final Server server = provider.get(Server.class);
         final ServicesManager servicesManager = provider.get(ServicesManager.class);
 

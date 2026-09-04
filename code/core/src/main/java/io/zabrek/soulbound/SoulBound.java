@@ -6,6 +6,7 @@ import io.zabrek.soulbound.api.kernel.CoreComponentLoader;
 import io.zabrek.soulbound.api.logger.SoulBoundLogger;
 import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
 import io.zabrek.soulbound.api.profile.ProfileProvider;
+import io.zabrek.soulbound.data.PlayerDataStorage;
 import io.zabrek.soulbound.database.Connector;
 import io.zabrek.soulbound.database.Saver;
 import io.zabrek.soulbound.faststats.FastStatsMetrics;
@@ -131,5 +132,14 @@ public class SoulBound extends JavaPlugin {
      */
     public Saver getSaver() {
         return loader.get(Saver.class);
+    }
+
+    /**
+     * Gets the stored player data.
+     *
+     * @return storage for currently loaded player data
+     */
+    public PlayerDataStorage getPlayerDataStorage() {
+        return loader.get(PlayerDataStorage.class);
     }
 }
