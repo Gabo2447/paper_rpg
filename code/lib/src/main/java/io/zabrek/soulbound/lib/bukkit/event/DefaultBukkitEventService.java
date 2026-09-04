@@ -1,0 +1,96 @@
+package io.zabrek.soulbound.lib.bukkit.event;
+
+import io.zabrek.soulbound.api.SoulBoundException;
+import io.zabrek.soulbound.api.bukkit.event.BukkitEventService;
+import io.zabrek.soulbound.api.bukkit.event.EventServiceSubscriber;
+import io.zabrek.soulbound.api.logger.SoulBoundLogger;
+import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Default implementation of {@link BukkitEventService}.
+ */
+public class DefaultBukkitEventService implements BukkitEventService {
+
+    /**
+     * All listeners registered by this service.
+     */
+    private final Map<Class<? extends Event>, EventListenerGroup<?>> listeners;
+
+    /**
+     * The logger instance to use.
+     */
+    private final SoulBoundLogger logger;
+
+    /**
+     * The plugin instance.
+     */
+    private final Plugin plugin;
+
+    /**
+     * Creates a new instance of the service.
+     *
+     * @param plugin        The plugin instance.
+     * @param loggerFactory The logger factory to use.
+     */
+    public DefaultBukkitEventService(final Plugin plugin, final SoulBoundLoggerFactory loggerFactory) {
+        this.listeners = new HashMap<>();
+        this.plugin = plugin;
+        this.logger = loggerFactory.create(plugin, "EventService");
+    }
+
+    @VisibleForTesting
+    @SuppressWarnings("unchecked")
+    <T extends Event> Optional<EventListenerGroup<T>> require(final Class<T> event) {
+        if (!listeners.containsKey(event)) {
+            final DefaultEventListenerGroup<T> group = new DefaultEventListenerGroup<>(this.logger, event);
+            try {
+                group.bake(plugin);
+            } catch (final SoulBoundException e) {
+                logger.error("Failed to register event listener for event '" + event.getSimpleName() + "'", e);
+                return Optional.empty();
+            }
+            listeners.put(event, group);
+            logger.debug("New listener for '" + event.getSimpleName() + "'");
+        }
+        return Optional.of((EventListenerGroup<T>) listeners.get(event));
+    }
+
+    @Override
+    public boolean require(final Class<? extends Event> event, final EventPriority priority) {
+        return require(event)
+                .map(group -> group.require(priority))
+                .orElse(false);
+    }
+
+    @Override
+    public <T extends Event> EventServiceSubscriber<T> subscribe(final Class<T> event, final EventPriority priority,
+                                                                 final boolean ignoreCancelled, final EventServiceSubscriber<T> subscriber) throws SoulBoundException {
+        return require(event)
+                .map(group -> group.subscribe(priority, ignoreCancelled, subscriber))
+                .orElseThrow(() -> new SoulBoundException("Could subscribe to event '" + event.getSimpleName() + "'"));
+    }
+
+    @Override
+    public void unsubscribe(final Class<? extends Event> event, final EventPriority priority, final EventServiceSubscriber<?> subscriber) {
+        if (!listeners.containsKey(event)) {
+            return;
+        }
+        require(event).ifPresent(group -> group.unsubscribe(priority, subscriber));
+    }
+
+    @Override
+    public void unsubscribeAll() {
+        for (final EventListenerGroup<?> group : listeners.values()) {
+            group.disable();
+        }
+        listeners.clear();
+    }
+}
