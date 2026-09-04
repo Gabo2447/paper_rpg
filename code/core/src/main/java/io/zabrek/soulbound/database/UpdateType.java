@@ -58,13 +58,13 @@ public enum UpdateType {
      */
     DELETE_TRIGGERS(prefix -> "DELETE FROM " + prefix + "triggers WHERE profileID = ?;"),
     /**
-     * Deletes all cooldown.
+     * Deletes all cooldown for a give profile. ProfileID.
      */
-    DELETE_COOLDOWN(prefix -> "DELETE FROM " + prefix + "cooldown;"),
+    DELETE_COOLDOWN(prefix -> "DELETE FROM " + prefix + "cooldown WHERE profileID = ?;"),
     /**
-     * Deletes all level.
+     * Deletes all level for a give profile. ProfileID.
      */
-    DELETE_LEVEL(prefix -> "DELETE FROM " + prefix + "level;"),
+    DELETE_LEVEL(prefix -> "DELETE FROM " + prefix + "level WHERE profileID = ?;"),
     /**
      * Deletes the player. PlayerID.
      */
