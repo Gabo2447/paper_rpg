@@ -11,7 +11,7 @@ public abstract class DefaultListener implements Listener {
     /**
      * The {@link ListenerService} for this listener.
      */
-    private final ListenerService service;
+    protected final ListenerService service;
 
     /**
      * Creates a new instance of the listener.

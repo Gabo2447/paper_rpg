@@ -8,6 +8,7 @@ import io.zabrek.soulbound.api.listeners.service.ListenerServiceProvider;
 import io.zabrek.soulbound.api.logger.SoulBoundLogger;
 import io.zabrek.soulbound.api.logger.SoulBoundLoggerFactory;
 import io.zabrek.soulbound.id.listener.ListenerIdentifierFactory;
+import io.zabrek.soulbound.listeners.death.EntityDeathFactory;
 import io.zabrek.soulbound.listeners.join.PlayerJoinFactory;
 
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public final class ListenerTypeRegistry {
 
         final Map<String, ListenerFactory> factories = new HashMap<>();
         factories.put("join", new PlayerJoinFactory());
+        factories.put("death", new EntityDeathFactory());
 
         try {
             log.info("Loading %d listener components...".formatted(factories.size()));

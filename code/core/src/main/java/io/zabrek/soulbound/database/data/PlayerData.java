@@ -143,7 +143,7 @@ public class PlayerData {
         }
     }
 
-    private void loadLevel(final String skill, final double level, final double experience) {
+    private void loadLevel(final String skill, final int level, final double experience) {
         try {
             final SkillIdentifier identifier = identifierRegistry.getFactory(SkillIdentifier.class).parseIdentifier(skill);
             final LevelRecord record = new LevelRecord(identifier, level, experience);

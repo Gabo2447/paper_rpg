@@ -9,6 +9,6 @@ import io.zabrek.soulbound.api.identifier.SkillIdentifier;
  * @param level      the level
  * @param experience the experience
  */
-public record LevelRecord(SkillIdentifier skill, double level, double experience) {
+public record LevelRecord(SkillIdentifier skill, int level, double experience) {
 
 }

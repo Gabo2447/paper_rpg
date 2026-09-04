@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new `faststats` component for core performance metrics and monitoring
 - new semantic `version` parsing, tokens, and comparison utilities
 - new `migrator` system
+- new `listener` loader
+- new `bukkit` event register
 ### Changed
 - updated build configuration
 ### Fixed

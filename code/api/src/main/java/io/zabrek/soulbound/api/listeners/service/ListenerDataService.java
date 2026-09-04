@@ -58,6 +58,14 @@ public interface ListenerDataService {
     void updateLevel(Profile profile, LevelRecord freshData);
 
     /**
+     * Updates the list of level data.
+     *
+     * @param profile the profile to update
+     * @param freshData the new data
+     */
+    void updateLevel(Profile profile, List<LevelRecord> freshData);
+
+    /**
      * Updates the cooldown data.
      *
      * @param profile   the profile to update
@@ -65,6 +73,14 @@ public interface ListenerDataService {
      * @since 2.0.0
      */
     void updateCooldown(Profile profile, CooldownRecord freshData);
+
+    /**
+     * Updates the list of cooldowns data.
+     *
+     * @param profile the profile to update
+     * @param freshData the new data
+     */
+    void updateCooldown(Profile profile, List<CooldownRecord> freshData);
 
     /**
      * Deletes all data.

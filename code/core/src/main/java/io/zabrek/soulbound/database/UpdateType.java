@@ -30,7 +30,7 @@ public enum UpdateType {
     /**
      * Add single player. PlayerID, active_profile, language.
      */
-    ADD_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?, ?);"),
+    ADD_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?, ?, ?);"),
 
     /**
      * Removes the single trigger. ProfileID, triggerID.

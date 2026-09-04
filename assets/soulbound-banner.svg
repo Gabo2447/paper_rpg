@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 600" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#24252A"/>
+      <stop offset="100%" stop-color="#121316"/>
+    </linearGradient>
+    
+    <!-- Purple Soul Gradient -->
+    <linearGradient id="soul-dark" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#4B2A85"/>
+      <stop offset="100%" stop-color="#9D4EDD"/>
+    </linearGradient>
+    
+    <!-- Cyan Energy Gradient -->
+    <linearGradient id="soul-light" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#00B4DB"/>
+      <stop offset="100%" stop-color="#00FFFF"/>
+    </linearGradient>
+    
+    <!-- Ethereal Glow Filter (Ampliado para evitar cortes) -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Canvas (Estilo Banner/Logo) -->
+  <rect width="2000" height="600" fill="url(#bg)" rx="45"/>
+
+  <!-- ==================== ISOTIPO (ICONO) ==================== -->
+  <g transform="translate(350, 300) scale(1.4)">
+    
+    <!-- 1. The Rune / Chain Link (Capa de fondo) -->
+    <path d="M 0 -110 L 110 0 L 0 110 L -110 0 Z" fill="none" stroke="#1A1B1F" stroke-width="32" stroke-linejoin="round"/>
+    <path d="M 0 -110 L 110 0 L 0 110 L -110 0 Z" fill="none" stroke="#2C2D35" stroke-width="16" stroke-linejoin="round"/>
+    
+    <!-- Rune Nodes -->
+    <circle cx="0" cy="-110" r="10" fill="#2C2D35"/>
+    <circle cx="0" cy="110" r="10" fill="#2C2D35"/>
+    <circle cx="-110" cy="0" r="10" fill="#2C2D35"/>
+    <circle cx="110" cy="0" r="10" fill="#2C2D35"/>
+
+    <!-- 2. Soul - Capa trasera (Morada) -->
+    <path d="M -50 120 C -140 20, -50 -80, 0 -130" fill="none" stroke="url(#soul-dark)" stroke-width="28" stroke-linecap="round" filter="url(#glow)"/>
+    
+    <!-- 3. TRUCO DE PROFUNDIDAD: Máscara falsa para la runa frontal -->
+    <!-- Este stroke oscuro del color del fondo crea el "hueco" y corta visualmente la capa de atrás -->
+    <path d="M -110 0 L 0 110" fill="none" stroke="#1c1d22" stroke-width="48" stroke-linejoin="round"/>
+    
+    <!-- Rune - Capa frontal entrelazada -->
+    <path d="M -110 0 L 0 110" fill="none" stroke="#1A1B1F" stroke-width="32" stroke-linejoin="round"/>
+    <path d="M -110 0 L 0 110" fill="none" stroke="#2C2D35" stroke-width="16" stroke-linejoin="round"/>
+
+    <!-- 4. TRUCO DE PROFUNDIDAD: Máscara falsa para el alma frontal -->
+    <path d="M 0 -130 C 80 -70, 100 40, 20 90 C -20 115, -10 140, 0 160" fill="none" stroke="#1c1d22" stroke-width="38" stroke-linecap="round"/>
+
+    <!-- Soul - Capa frontal (Cyan) -->
+    <path d="M 0 -130 C 80 -70, 100 40, 20 90 C -20 115, -10 140, 0 160" fill="none" stroke="url(#soul-light)" stroke-width="20" stroke-linecap="round" filter="url(#glow)"/>
+
+    <!-- 5. Inner Soul Core -->
+    <!-- Ajuste fino en la posición para que sea el epicentro gravitacional -->
+    <path d="M 0 -40 C -30 10, -30 50, 0 75 C 30 50, 30 10, 0 -40 Z" fill="url(#soul-light)" filter="url(#glow)"/>
+    <path d="M 0 -15 C -12 20, -12 40, 0 55 C 12 40, 12 20, 0 -15 Z" fill="#FFFFFF"/>
+  </g>
+
+  <!-- ==================== WORDMARK (TEXTO) ==================== -->
+  <!-- Usamos fuentes del sistema robustas para máximo rendimiento sin paths complejos -->
+  <text x="680" y="360" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="900" font-size="180" fill="#FFFFFF" letter-spacing="4">
+    SOUL<tspan fill="url(#soul-light)">BOUND</tspan>
+  </text>
+</svg>

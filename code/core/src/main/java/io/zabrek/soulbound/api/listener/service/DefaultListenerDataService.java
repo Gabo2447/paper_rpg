@@ -65,9 +65,21 @@ public class DefaultListenerDataService implements ListenerDataService {
     }
 
     @Override
+    public void updateLevel(final Profile profile, final List<LevelRecord> freshData) {
+        final PlayerData playerData = playerDataStorage.get(profile);
+        playerData.setLevels(freshData);
+    }
+
+    @Override
     public void updateCooldown(final Profile profile, final CooldownRecord freshData) {
         final PlayerData playerData = playerDataStorage.get(profile);
         playerData.addCooldown(freshData);
+    }
+
+    @Override
+    public void updateCooldown(final Profile profile, final List<CooldownRecord> freshData) {
+        final PlayerData playerData = playerDataStorage.get(profile);
+        playerData.setCooldowns(freshData);
     }
 
     @Override
