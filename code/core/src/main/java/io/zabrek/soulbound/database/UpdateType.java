@@ -14,11 +14,11 @@ public enum UpdateType {
     /**
      * Add single player profile. PlayerID, profileID, name.
      */
-    ADD_PLAYER_PROFILE(prefix -> "INSERT INTO " + prefix + "player_profile (playerID, profileID, name) VALUES (?, ?, ?);"),
+    ADD_PLAYER_PROFILE(prefix -> "INSERT INTO " + prefix + "player_profile (playerID, profileID, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE name = VALUES(name);"),
     /**
      * Add single profile. ProfileID.
      */
-    ADD_PROFILE(prefix -> "INSERT INTO " + prefix + "profile (profileID) VALUES (?);"),
+    ADD_PROFILE(prefix -> "INSERT INTO " + prefix + "profile (profileID) VALUES (?) ON DUPLICATE KEY UPDATE profileID = profileID;"),
     /**
      * Add single cooldown. ProfileID, skill, time.
      */
@@ -30,7 +30,7 @@ public enum UpdateType {
     /**
      * Add single player. PlayerID, active_profile, language.
      */
-    ADD_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?, ?, ?);"),
+    ADD_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE active_profile = VALUES(active_profile), language = VALUES(language);"),
 
     /**
      * Removes the single trigger. ProfileID, triggerID.
@@ -127,15 +127,15 @@ public enum UpdateType {
     /**
      * Inserts a new player. PlayerID, active_profile, language.
      */
-    INSERT_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?,?,?);"),
+    INSERT_PLAYER(prefix -> "INSERT INTO " + prefix + "player (playerID, active_profile, language) VALUES (?,?,?) ON DUPLICATE KEY UPDATE active_profile = VALUES(active_profile), language = VALUES(language);"),
     /**
      * Inserts a new profile. ProfileID.
      */
-    INSERT_PROFILE(prefix -> "INSERT INTO " + prefix + "profile (profileID) VALUES (?);"),
+    INSERT_PROFILE(prefix -> "INSERT INTO " + prefix + "profile (profileID) VALUES (?) ON DUPLICATE KEY UPDATE profileID = profileID;"),
     /**
      * Inserts a new player profile. PlayerID, profileID, name.
      */
-    INSERT_PLAYER_PROFILE(prefix -> "INSERT INTO " + prefix + "player_profile (playerID, profileID, name) VALUES (?,?,?);"),
+    INSERT_PLAYER_PROFILE(prefix -> "INSERT INTO " + prefix + "player_profile (playerID, profileID, name) VALUES (?,?,?) ON DUPLICATE KEY UPDATE name = VALUES(name);"),
     /**
      * Inserts a new cooldown. ProfileID, skill, time.
      */
